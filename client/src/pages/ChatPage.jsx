@@ -78,7 +78,7 @@ const ChatPage = () => {
   const closeSidebar = () => setSidebarOpen(false);
   const avatarTone = (name = '') => `tone-${name.charCodeAt(0) % 8}`;
   const openAddMemberPage = () => navigate('/add-member');
-  const openViewMemberPage = () => navigate('/view-member');
+  const openViewMemberPage = () => navigate('/members');
 
   return (
     <div className="chat-page">

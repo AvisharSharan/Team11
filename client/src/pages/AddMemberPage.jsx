@@ -1,34 +1,49 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
-
-const AddMemberPage = () => {
-  const navigate = useNavigate();
-
-  return (
-    <div className="add-member-page">
-      <div className="add-member-card">
-        <div className="add-member-head">
-          <h1>Add member</h1>
-          <button
-            type="button"
-            className="add-member-back-btn"
-            onClick={() => navigate('/chat')}
-          >
-            Back to chat
-          </button>
-        </div>
-        <p className="add-member-copy">
-          This page is ready for your add-member flow.
-        </p>
-      </div>
-    </div>
-  );
-};
-
-export default AddMemberPage;
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import { createMember, uploadMemberPhoto } from '../api/memberApi';
+
+const MemberField = ({ label, name, value, onChange, onClearError, error, type = 'text', placeholder, as }) => (
+  <div style={{ display: 'flex', flexDirection: 'column', gap: 4, marginBottom: 14 }}>
+    <label style={labelStyle}>{label}</label>
+    {as === 'textarea' ? (
+      <textarea
+        name={name}
+        value={value}
+        onChange={onChange}
+        placeholder={placeholder}
+        style={{
+          ...inputStyle,
+          minHeight: 80,
+          resize: 'vertical',
+          borderColor: error ? '#E24B4A' : undefined,
+        }}
+      />
+    ) : as === 'select' ? (
+      <select
+        name={name}
+        value={value}
+        onChange={onChange}
+        style={{ ...inputStyle, borderColor: error ? '#E24B4A' : undefined }}
+      >
+        <option value="">Select year</option>
+        {['1st Year', '2nd Year', '3rd Year', '4th Year'].map((yearOption) => (
+          <option key={yearOption}>{yearOption}</option>
+        ))}
+      </select>
+    ) : (
+      <input
+        type={type}
+        name={name}
+        value={value}
+        onChange={onChange}
+        onFocus={onClearError}
+        placeholder={placeholder}
+        style={{ ...inputStyle, borderColor: error ? '#E24B4A' : undefined }}
+      />
+    )}
+    {error && <span style={errStyle}>{error}</span>}
+  </div>
+);
 
 const AddMemberPage = () => {
   const navigate = useNavigate();
@@ -43,10 +58,12 @@ const AddMemberPage = () => {
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [submitError, setSubmitError] = useState('');
 
   const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-    setErrors({ ...errors, [e.target.name]: '' });
+    const { name, value } = e.target;
+    setForm((currentForm) => ({ ...currentForm, [name]: value }));
+    setErrors((currentErrors) => ({ ...currentErrors, [name]: '' }));
   };
 
   const handlePhoto = (e) => {
@@ -54,7 +71,7 @@ const AddMemberPage = () => {
     if (file) {
       setPhoto(file);
       setPreview(URL.createObjectURL(file));
-      setErrors({ ...errors, photo: '' });
+      setErrors((currentErrors) => ({ ...currentErrors, photo: '' }));
     }
   };
 
@@ -81,44 +98,24 @@ const AddMemberPage = () => {
     if (!validate()) return;
 
     setLoading(true);
-    const formData = new FormData();
-    Object.entries(form).forEach(([key, val]) => formData.append(key, val));
-    formData.append('photo', photo);
+    setSubmitError('');
 
     try {
-      await axios.post('/members', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
+      const uploadResult = await uploadMemberPhoto(photo);
+      await createMember({
+        ...form,
+        photoUrl: uploadResult.fileUrl,
+        photoPublicId: uploadResult.filePublicId,
+        photoName: uploadResult.originalName,
       });
       setSuccess(true);
-      setTimeout(() => navigate('/'), 2000);
+      setTimeout(() => navigate('/view-member'), 2000);
     } catch (err) {
-      alert('Submission failed: ' + (err.response?.data?.message || err.message));
+      setSubmitError(err.response?.data?.message || err.message || 'Submission failed');
     } finally {
       setLoading(false);
     }
   };
-
-  const Field = ({ label, name, type = 'text', placeholder, as }) => (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 4, marginBottom: 14 }}>
-      <label style={labelStyle}>{label}</label>
-      {as === 'textarea' ? (
-        <textarea name={name} value={form[name]} onChange={handleChange}
-          placeholder={placeholder} style={{ ...inputStyle, minHeight: 80, resize: 'vertical',
-            borderColor: errors[name] ? '#E24B4A' : undefined }} />
-      ) : as === 'select' ? (
-        <select name={name} value={form[name]} onChange={handleChange}
-          style={{ ...inputStyle, borderColor: errors[name] ? '#E24B4A' : undefined }}>
-          <option value="">Select year</option>
-          {['1st Year','2nd Year','3rd Year','4th Year'].map(y => <option key={y}>{y}</option>)}
-        </select>
-      ) : (
-        <input type={type} name={name} value={form[name]} onChange={handleChange}
-          placeholder={placeholder} style={{ ...inputStyle,
-            borderColor: errors[name] ? '#E24B4A' : undefined }} />
-      )}
-      {errors[name] && <span style={errStyle}>{errors[name]}</span>}
-    </div>
-  );
 
   return (
     <div style={pageStyle}>
@@ -132,29 +129,29 @@ const AddMemberPage = () => {
           <div style={successBannerStyle}>Member added successfully! Redirecting...</div>
         )}
 
-        <form onSubmit={handleSubmit} encType="multipart/form-data">
+        {submitError && <div style={errorBannerStyle}>{submitError}</div>}
+
+        <form onSubmit={handleSubmit}>
           <div style={rowStyle}>
-            <Field label="Name" name="name" placeholder="Full name" />
-            <Field label="Roll Number" name="rollNumber" placeholder="e.g. 21CS101" />
+            <MemberField label="Name" name="name" value={form.name} onChange={handleChange} onClearError={() => setErrors((currentErrors) => ({ ...currentErrors, name: '' }))} error={errors.name} placeholder="Full name" />
+            <MemberField label="Roll Number" name="rollNumber" value={form.rollNumber} onChange={handleChange} onClearError={() => setErrors((currentErrors) => ({ ...currentErrors, rollNumber: '' }))} error={errors.rollNumber} placeholder="e.g. 21CS101" />
           </div>
           <div style={rowStyle}>
-            <Field label="Year" name="year" as="select" />
-            <Field label="Degree" name="degree" placeholder="e.g. B.Tech CSE" />
+            <MemberField label="Year" name="year" value={form.year} onChange={handleChange} onClearError={() => setErrors((currentErrors) => ({ ...currentErrors, year: '' }))} error={errors.year} as="select" />
+            <MemberField label="Degree" name="degree" value={form.degree} onChange={handleChange} onClearError={() => setErrors((currentErrors) => ({ ...currentErrors, degree: '' }))} error={errors.degree} placeholder="e.g. B.Tech CSE" />
           </div>
           <div style={rowStyle}>
-            <Field label="Email" name="email" type="email" placeholder="email@example.com" />
-            <Field label="Role" name="role" placeholder="e.g. Frontend Developer" />
+            <MemberField label="Email" name="email" value={form.email} onChange={handleChange} onClearError={() => setErrors((currentErrors) => ({ ...currentErrors, email: '' }))} error={errors.email} type="email" placeholder="email@example.com" />
+            <MemberField label="Role" name="role" value={form.role} onChange={handleChange} onClearError={() => setErrors((currentErrors) => ({ ...currentErrors, role: '' }))} error={errors.role} placeholder="e.g. Frontend Developer" />
           </div>
-          <Field label="About Project" name="aboutProject" as="textarea"
-            placeholder="Brief description of your project..." />
+          <MemberField label="About Project" name="aboutProject" value={form.aboutProject} onChange={handleChange} onClearError={() => setErrors((currentErrors) => ({ ...currentErrors, aboutProject: '' }))} error={errors.aboutProject} as="textarea" placeholder="Brief description of your project..." />
           <div style={rowStyle}>
-            <Field label="Hobbies (comma separated)" name="hobbies" placeholder="Reading, Coding..." />
-            <Field label="Certificate" name="certificate" placeholder="e.g. AWS Practitioner" />
+            <MemberField label="Hobbies (comma separated)" name="hobbies" value={form.hobbies} onChange={handleChange} onClearError={() => setErrors((currentErrors) => ({ ...currentErrors, hobbies: '' }))} error={errors.hobbies} placeholder="Reading, Coding..." />
+            <MemberField label="Certificate" name="certificate" value={form.certificate} onChange={handleChange} onClearError={() => setErrors((currentErrors) => ({ ...currentErrors, certificate: '' }))} error={errors.certificate} placeholder="e.g. AWS Practitioner" />
           </div>
           <div style={rowStyle}>
-            <Field label="Internship" name="internship" placeholder="Company or role" />
-            <Field label="About Your Aim" name="aboutAim" as="textarea"
-              placeholder="Your career goal..." />
+            <MemberField label="Internship" name="internship" value={form.internship} onChange={handleChange} onClearError={() => setErrors((currentErrors) => ({ ...currentErrors, internship: '' }))} error={errors.internship} placeholder="Company or role" />
+            <MemberField label="About Your Aim" name="aboutAim" value={form.aboutAim} onChange={handleChange} onClearError={() => setErrors((currentErrors) => ({ ...currentErrors, aboutAim: '' }))} error={errors.aboutAim} as="textarea" placeholder="Your career goal..." />
           </div>
 
           {/* Photo Upload */}
@@ -199,5 +196,6 @@ const uploadZoneStyle = { display: 'block', border: '1px dashed #ccc', borderRad
 const submitBtnStyle = { width: '100%', padding: 11, background: '#185FA5', color: '#fff', fontSize: 14, fontWeight: 500, border: 'none', borderRadius: 8, cursor: 'pointer', marginTop: 8 };
 const backBtnStyle = { fontSize: 13, color: '#666', background: 'none', border: '0.5px solid #ccc', borderRadius: 8, padding: '6px 14px', cursor: 'pointer' };
 const successBannerStyle = { background: '#eaf3de', color: '#3B6D11', border: '0.5px solid #639922', borderRadius: 8, padding: '12px 16px', fontSize: 14, marginBottom: 16 };
+const errorBannerStyle = { background: '#fdecec', color: '#b42318', border: '0.5px solid #f2b8b5', borderRadius: 8, padding: '12px 16px', fontSize: 14, marginBottom: 16 };
 
 export default AddMemberPage;

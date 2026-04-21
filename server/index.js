@@ -13,6 +13,7 @@ const userRoutes = require('./routes/userRoutes');
 const conversationRoutes = require('./routes/conversationRoutes');
 const messageRoutes = require('./routes/messageRoutes');
 const uploadRoutes = require('./routes/uploadRoutes');
+const memberRoutes = require('./routes/memberRoutes');
 
 connectDB();
 
@@ -91,6 +92,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/conversations', conversationRoutes);
 app.use('/api/messages', messageRoutes);
 app.use('/api/upload', uploadRoutes);
+app.use('/api/members', memberRoutes);
 
 app.get('/', (req, res) => res.send('SyncSphere API is running'));
 
