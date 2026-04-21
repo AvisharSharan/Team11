@@ -1,0 +1,229 @@
+.add-member-page {
+    min-height: 100vh;
+    padding: 32px 24px;
+    background: #f8fafc;
+}
+
+.add-member-card {
+    max-width: 720px;
+    margin: 0 auto;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
+    padding: 28px 28px 36px;
+}
+
+.add-member-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.add-member-head h1 {
+    margin: 0;
+    font-size: 1.75rem;
+    color: #0f172a;
+    font-weight: 600;
+}
+
+.add-member-back-btn {
+    padding: 9px 16px;
+    border: 1px solid #cbd5e1;
+    background: #ffffff;
+    border-radius: 8px;
+    cursor: pointer;
+    color: #334155;
+    font-size: 0.9rem;
+    transition: background 0.15s, border-color 0.15s;
+}
+
+.add-member-back-btn:hover {
+    background: #f1f5f9;
+    border-color: #94a3b8;
+}
+
+.add-member-form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.add-member-image-section {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 16px;
+    background: #f8fafc;
+    border: 1px dashed #cbd5e1;
+    border-radius: 10px;
+}
+
+.add-member-preview {
+    width: 96px;
+    height: 96px;
+    border-radius: 50%;
+    background: #e2e8f0;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.add-member-preview-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.add-member-preview-placeholder {
+    font-size: 0.75rem;
+    color: #64748b;
+}
+
+.add-member-file-label {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 9px 16px;
+    background: #ffffff;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    color: #334155;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+}
+
+.add-member-file-label:hover {
+    background: #f1f5f9;
+    border-color: #94a3b8;
+}
+
+.add-member-file-input {
+    display: none;
+}
+
+.add-member-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    flex: 1;
+}
+
+.add-member-field label {
+    font-size: 0.85rem;
+    color: #334155;
+    font-weight: 500;
+}
+
+.add-member-field input,
+.add-member-field textarea {
+    padding: 10px 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    color: #0f172a;
+    background: #ffffff;
+    font-family: inherit;
+    transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.add-member-field input:focus,
+.add-member-field textarea:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+.add-member-field textarea {
+    resize: vertical;
+    min-height: 88px;
+}
+
+.add-member-row {
+    display: flex;
+    gap: 16px;
+}
+
+.add-member-status {
+    margin: 0;
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+}
+
+.add-member-error {
+    background: #fef2f2;
+    color: #dc2626;
+    border: 1px solid #fecaca;
+}
+
+.add-member-success {
+    background: #f0fdf4;
+    color: #16a34a;
+    border: 1px solid #bbf7d0;
+}
+
+.add-member-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 6px;
+}
+
+.add-member-secondary-btn,
+.add-member-submit-btn {
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s, opacity 0.15s;
+}
+
+.add-member-secondary-btn {
+    background: #ffffff;
+    border: 1px solid #cbd5e1;
+    color: #334155;
+}
+
+.add-member-secondary-btn:hover:not(:disabled) {
+    background: #f1f5f9;
+    border-color: #94a3b8;
+}
+
+.add-member-submit-btn {
+    background: #2563eb;
+    border: none;
+    color: #ffffff;
+}
+
+.add-member-submit-btn:hover:not(:disabled) {
+    background: #1d4ed8;
+}
+
+.add-member-submit-btn:disabled,
+.add-member-secondary-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+@media (max-width: 520px) {
+    .add-member-page {
+        padding: 16px 12px;
+    }
+    .add-member-card {
+        padding: 20px 16px 28px;
+    }
+    .add-member-row {
+        flex-direction: column;
+        gap: 18px;
+    }
+    .add-member-image-section {
+        flex-direction: column;
+        text-align: center;
+    }
+}
