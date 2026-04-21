@@ -1,15 +1,12 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const UPLOADS_BASE = `${process.env.REACT_APP_API_BASE_URL}/uploads`;
 const FALLBACK_IMG =
     'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><rect width="200" height="200" fill="%23e2e8f0"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Arial" font-size="20" fill="%2364748b">No Image</text></svg>';
 
 const MemberTile = ({ member }) => {
     const navigate = useNavigate();
-    const imageUrl = member.profileImage
-        ? `${UPLOADS_BASE}/${member.profileImage}`
-        : FALLBACK_IMG;
+    const imageUrl = member.photoUrl || member.profileImage || FALLBACK_IMG;
 
     const handleError = (e) => {
         e.currentTarget.onerror = null;

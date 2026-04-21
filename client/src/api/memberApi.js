@@ -1,14 +1,21 @@
-import axios from 'axios';
+import api from './axiosInstance';
 
-const axiosClient = axios.create({
-    baseURL: process.env.REACT_APP_API_BASE_URL,
-    headers: { 'Content-Type': 'application/json' },
-    timeout: 10000,
-});
+export const uploadMemberPhoto = async (file) => {
+    const formData = new FormData();
+    formData.append('file', file);
 
-export const fetchAllMembers = async () => {
-    const { data } = await axiosClient.get('/members');
+    const { data } = await api.post('/upload', formData);
     return data;
 };
 
-export default axiosClient;
+export const createMember = async (payload) => {
+    const { data } = await api.post('/members', payload);
+    return data;
+};
+
+export const fetchAllMembers = async () => {
+    const { data } = await api.get('/members');
+    return data;
+};
+
+export default api;
