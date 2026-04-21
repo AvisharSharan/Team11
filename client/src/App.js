@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import AuthPage from './pages/AuthPage';
 import ChatPage from './pages/ChatPage';
 import AddMemberPage from './pages/AddMemberPage';
+import MemberDetailsPage from './pages/MemberDetailsPage';
 import ViewMemberPage from './pages/ViewMemberPage';
 import useAuthStore from './store/useAuthStore';
 
@@ -30,6 +31,14 @@ function App() {
                     element={
                         <PrivateRoute>
                             <AddMemberPage />
+                        </PrivateRoute>
+                    }
+                />
+                <Route
+                    path="/members/:id"
+                    element={
+                        <PrivateRoute>
+                            <MemberDetailsPage />
                         </PrivateRoute>
                     }
                 />

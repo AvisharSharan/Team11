@@ -1,0 +1,226 @@
+.member-details-page {
+    min-height: 100vh;
+    padding: 32px 24px;
+    background: #f8fafc;
+}
+
+.member-details-card {
+    max-width: 880px;
+    margin: 0 auto;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
+    padding: 28px 28px 36px;
+}
+
+.member-details-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.member-details-head h1 {
+    margin: 0;
+    font-size: 1.75rem;
+    color: #0f172a;
+    font-weight: 600;
+}
+
+.member-details-back-btn {
+    padding: 9px 16px;
+    border: 1px solid #cbd5e1;
+    background: #ffffff;
+    border-radius: 8px;
+    cursor: pointer;
+    color: #334155;
+    font-size: 0.9rem;
+    transition: background 0.15s, border-color 0.15s;
+}
+
+.member-details-back-btn:hover {
+    background: #f1f5f9;
+    border-color: #94a3b8;
+}
+
+.member-details-status {
+    text-align: center;
+    color: #64748b;
+    padding: 32px 0;
+    font-size: 0.95rem;
+}
+
+.member-details-error {
+    color: #dc2626;
+}
+
+.member-details-hero {
+    display: flex;
+    gap: 24px;
+    padding: 24px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    margin-bottom: 20px;
+}
+
+.member-details-image-wrap {
+    width: 160px;
+    height: 160px;
+    border-radius: 12px;
+    overflow: hidden;
+    background: #e2e8f0;
+    flex-shrink: 0;
+}
+
+.member-details-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.member-details-hero-info {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 0;
+}
+
+.member-details-name {
+    margin: 0;
+    font-size: 1.5rem;
+    color: #0f172a;
+    font-weight: 600;
+}
+
+.member-details-role {
+    margin: 0 0 8px;
+    font-size: 1rem;
+    color: #64748b;
+}
+
+.member-details-contact-link {
+    color: #2563eb;
+    text-decoration: none;
+    font-size: 0.9rem;
+    word-break: break-all;
+}
+
+.member-details-contact-link:hover {
+    text-decoration: underline;
+}
+
+.member-details-section {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #e2e8f0;
+}
+
+.member-details-section h3 {
+    margin: 0 0 12px;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #0f172a;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.member-details-bio {
+    margin: 0;
+    color: #334155;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    white-space: pre-wrap;
+}
+
+.member-details-meta {
+    margin: 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+}
+
+.member-details-meta-row {
+    display: grid;
+    grid-template-columns: 180px 1fr;
+    gap: 16px;
+    padding: 10px 0;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.member-details-meta-row:last-child {
+    border-bottom: none;
+}
+
+.member-details-meta dt {
+    color: #64748b;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.member-details-meta dd {
+    margin: 0;
+    color: #0f172a;
+    font-size: 0.9rem;
+    word-break: break-all;
+}
+
+.member-details-mono {
+    font-family: 'JetBrains Mono', 'Fira Code', 'Menlo', monospace;
+    font-size: 0.85rem;
+    color: #334155;
+}
+
+.member-details-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 24px;
+}
+
+.member-details-delete-btn {
+    padding: 10px 18px;
+    border: 1px solid #fecaca;
+    background: #ffffff;
+    color: #dc2626;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s, opacity 0.15s;
+}
+
+.member-details-delete-btn:hover:not(:disabled) {
+    background: #fef2f2;
+    border-color: #fca5a5;
+}
+
+.member-details-delete-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+@media (max-width: 600px) {
+    .member-details-page {
+        padding: 16px 12px;
+    }
+    .member-details-card {
+        padding: 20px 16px 28px;
+    }
+    .member-details-hero {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        padding: 20px 16px;
+    }
+    .member-details-image-wrap {
+        width: 140px;
+        height: 140px;
+    }
+    .member-details-meta-row {
+        grid-template-columns: 1fr;
+        gap: 4px;
+    }
+}
