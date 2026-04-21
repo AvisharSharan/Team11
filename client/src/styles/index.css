@@ -291,6 +291,23 @@ ul { list-style: none; }
   gap: 0.75rem;
 }
 
+.chat-add-member-btn {
+  height: 36px;
+  padding: 0 14px;
+  border-radius: 999px;
+  border: 1px solid #cfe6dc;
+  background: #f3fbf7;
+  color: #0f6f52;
+  font-size: 0.84rem;
+  font-weight: 700;
+  transition: all 0.2s;
+}
+
+.chat-add-member-btn:hover {
+  background: #e7f6ef;
+  border-color: #b6dacb;
+}
+
 .chat-menu-toggle {
   display: none;
   width: 36px;
@@ -407,9 +424,86 @@ ul { list-style: none; }
 
   .chat-user-name-sm { display: none; }
 
+  .chat-add-member-btn {
+    height: 34px;
+    padding: 0 12px;
+    font-size: 0.8rem;
+  }
+
   .chat-main {
     flex-direction: column;
   }
 
   .sidebar-overlay { display: block; }
+}
+
+/* Add member page */
+.add-member-page {
+  min-height: 100vh;
+  padding: 28px 18px;
+  background:
+    radial-gradient(700px 320px at -8% -12%, #e7f6ff 0%, transparent 62%),
+    radial-gradient(700px 320px at 108% 112%, #e8fff4 0%, transparent 60%),
+    #f8faf9;
+}
+
+.add-member-card {
+  max-width: 760px;
+  margin: 0 auto;
+  background: #ffffff;
+  border: 1px solid #dfe8e4;
+  border-radius: 18px;
+  box-shadow: 0 14px 34px rgba(16, 41, 34, 0.08);
+  padding: 22px;
+}
+
+.add-member-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.add-member-head h1 {
+  margin: 0;
+  font-size: 1.2rem;
+  color: #143327;
+}
+
+.add-member-back-btn {
+  height: 36px;
+  padding: 0 14px;
+  border-radius: 999px;
+  border: 1px solid #d5e8de;
+  background: #ffffff;
+  color: #305248;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.add-member-back-btn:hover {
+  background: #f6faf8;
+}
+
+.add-member-copy {
+  margin-top: 14px;
+  color: #55726a;
+  line-height: 1.6;
+}
+
+@media (max-width: 640px) {
+  .add-member-page {
+    min-height: 100dvh;
+    padding: 14px;
+  }
+
+  .add-member-card {
+    padding: 16px;
+    border-radius: 14px;
+  }
+
+  .add-member-head {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 }

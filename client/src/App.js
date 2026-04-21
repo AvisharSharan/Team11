@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import AuthPage from './pages/AuthPage';
 import ChatPage from './pages/ChatPage';
+import AddMemberPage from './pages/AddMemberPage';
 import useAuthStore from './store/useAuthStore';
 
 const PrivateRoute = ({ children }) => {
@@ -20,6 +21,14 @@ function App() {
           element={
             <PrivateRoute>
               <ChatPage />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/add-member"
+          element={
+            <PrivateRoute>
+              <AddMemberPage />
             </PrivateRoute>
           }
         />
