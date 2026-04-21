@@ -1,9 +1,7 @@
-import multer from 'multer';
-import path from 'path';
-import { fileURLToPath } from 'url';
-import fs from 'fs';
+const multer = require('multer');
+const path = require('path');
+const fs = require('fs');
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const uploadsDir = path.join(__dirname, '..', 'uploads');
 
 if (!fs.existsSync(uploadsDir)) {
@@ -24,8 +22,10 @@ const fileFilter = (_req, file, cb) => {
     else cb(new Error('Only image files are allowed'), false);
 };
 
-export const upload = multer({
+const upload = multer({
     storage,
     fileFilter,
     limits: { fileSize: 5 * 1024 * 1024 },
 });
+
+module.exports = { upload };
