@@ -291,6 +291,13 @@ ul { list-style: none; }
   gap: 0.75rem;
 }
 
+.chat-member-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
 .chat-add-member-btn {
   height: 36px;
   padding: 0 14px;
@@ -306,6 +313,23 @@ ul { list-style: none; }
 .chat-add-member-btn:hover {
   background: #e7f6ef;
   border-color: #b6dacb;
+}
+
+.chat-view-members-btn {
+  height: 36px;
+  padding: 0 14px;
+  border-radius: 999px;
+  border: 1px solid #d9e5df;
+  background: #ffffff;
+  color: #305248;
+  font-size: 0.84rem;
+  font-weight: 700;
+  transition: all 0.2s;
+}
+
+.chat-view-members-btn:hover {
+  background: #f6faf8;
+  border-color: #c4d6ce;
 }
 
 .chat-menu-toggle {
@@ -425,6 +449,12 @@ ul { list-style: none; }
   .chat-user-name-sm { display: none; }
 
   .chat-add-member-btn {
+    height: 34px;
+    padding: 0 12px;
+    font-size: 0.8rem;
+  }
+
+  .chat-view-members-btn {
     height: 34px;
     padding: 0 12px;
     font-size: 0.8rem;

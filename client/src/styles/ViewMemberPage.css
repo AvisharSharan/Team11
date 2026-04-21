@@ -1,71 +1,99 @@
 .view-member-page {
     min-height: 100vh;
-    padding: 32px 24px;
-    background: #f8fafc;
+    padding: 28px 18px;
+    background:
+        radial-gradient(800px 360px at -10% -10%, #e7f6ff 0%, transparent 60%),
+        radial-gradient(800px 360px at 110% 120%, #e8fff4 0%, transparent 62%),
+        #f8faf9;
 }
 
 .view-member-card {
-    max-width: 1200px;
+    max-width: 1180px;
     margin: 0 auto;
     background: #ffffff;
-    border-radius: 12px;
-    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
-    padding: 28px 28px 36px;
+    border: 1px solid #dfe8e4;
+    border-radius: 20px;
+    box-shadow: 0 16px 36px rgba(16, 41, 34, 0.08);
+    padding: 24px;
 }
 
 .view-member-head {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: space-between;
-    margin-bottom: 24px;
-    gap: 16px;
+    gap: 12px;
     flex-wrap: wrap;
 }
 
 .view-member-head h1 {
     margin: 0;
-    font-size: 1.75rem;
-    color: #0f172a;
-    font-weight: 600;
+    font-size: 1.3rem;
+    color: #143327;
+    font-weight: 700;
+}
+
+.view-member-team {
+    margin-top: 8px;
+    color: #567169;
+    line-height: 1.6;
+}
+
+.view-member-team strong {
+    color: #143327;
 }
 
 .view-member-back-btn {
-    padding: 9px 16px;
-    border: 1px solid #cbd5e1;
+    height: 38px;
+    padding: 0 16px;
+    border: 1px solid #d5e8de;
     background: #ffffff;
-    border-radius: 8px;
+    border-radius: 999px;
     cursor: pointer;
-    color: #334155;
-    font-size: 0.9rem;
-    transition: background 0.15s, border-color 0.15s;
+    color: #305248;
+    font-size: 0.85rem;
+    font-weight: 700;
 }
 
 .view-member-back-btn:hover {
-    background: #f1f5f9;
-    border-color: #94a3b8;
+    background: #f6faf8;
 }
 
 .view-member-status {
     text-align: center;
-    color: #64748b;
-    padding: 32px 0;
+    color: #567169;
+    padding: 28px 0 12px;
     font-size: 0.95rem;
 }
 
 .view-member-error {
-    color: #dc2626;
+    color: #a1133a;
+}
+
+.view-member-success {
+    color: #166534;
+}
+
+.view-member-empty {
+    margin-top: 18px;
+    padding: 24px;
+    border: 1px dashed #d5e8de;
+    border-radius: 18px;
+    color: #567169;
+    text-align: center;
+    background: #f6faf8;
 }
 
 .member-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-    gap: 20px;
+    gap: 18px;
+    margin-top: 18px;
 }
 
 .member-tile {
     background: #ffffff;
-    border: 1px solid #e2e8f0;
-    border-radius: 12px;
+    border: 1px solid #dfe8e4;
+    border-radius: 18px;
     overflow: hidden;
     display: flex;
     flex-direction: column;
@@ -74,15 +102,17 @@
 
 .member-tile:hover {
     transform: translateY(-3px);
-    box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
-    border-color: #cbd5e1;
+    box-shadow: 0 12px 28px rgba(16, 41, 34, 0.08);
+    border-color: #c7d8d1;
 }
 
 .member-tile-image-wrap {
     width: 100%;
     aspect-ratio: 1 / 1;
-    background: #f1f5f9;
+    background: linear-gradient(180deg, #edf6f3, #f7fbf9);
     overflow: hidden;
+    display: grid;
+    place-items: center;
 }
 
 .member-tile-image {
@@ -92,51 +122,88 @@
     display: block;
 }
 
+.member-tile-avatar {
+    width: 78px;
+    height: 78px;
+    border-radius: 22px;
+    display: grid;
+    place-items: center;
+    color: #ffffff;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    font-size: 1rem;
+}
+
 .member-tile-body {
     padding: 16px;
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 8px;
+    min-height: 0;
+}
+
+.member-team-badge {
+    width: fit-content;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: #f0f8f5;
+    color: #0f7c5a;
+    font-size: 0.76rem;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
 }
 
 .member-tile-name {
     margin: 0;
     font-size: 1.05rem;
-    color: #0f172a;
-    font-weight: 600;
+    color: #143327;
+    font-weight: 700;
 }
 
 .member-tile-role {
-    margin: 0 0 10px;
-    font-size: 0.875rem;
-    color: #64748b;
+    margin: 0;
+    font-size: 0.9rem;
+    color: #567169;
+}
+
+.member-tile-roll {
+    margin: 0;
+    font-size: 0.85rem;
+    color: #305248;
+    word-break: break-word;
 }
 
 .member-tile-btn {
-    margin-top: auto;
-    padding: 9px 14px;
-    border: none;
-    background: #2563eb;
+    margin-top: 8px;
+    height: 38px;
+    width: 100%;
+    border: 1px solid #0f7c5a;
+    background: #0f7c5a;
     color: #ffffff;
-    border-radius: 8px;
-    font-size: 0.875rem;
-    cursor: pointer;
-    transition: background 0.15s ease;
+    border-radius: 999px;
+    font-size: 0.86rem;
+    font-weight: 700;
 }
 
 .member-tile-btn:hover {
-    background: #1d4ed8;
+    background: #0c5f48;
+    border-color: #0c5f48;
 }
 
-@media (max-width: 480px) {
+@media (max-width: 720px) {
     .view-member-page {
-        padding: 16px 12px;
+        min-height: 100dvh;
+        padding: 14px;
     }
+
     .view-member-card {
-        padding: 20px 16px 28px;
+        padding: 16px;
+        border-radius: 16px;
     }
+
     .member-grid {
-        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
         gap: 14px;
     }
 }

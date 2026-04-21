@@ -78,10 +78,7 @@ const ChatPage = () => {
   const closeSidebar = () => setSidebarOpen(false);
   const avatarTone = (name = '') => `tone-${name.charCodeAt(0) % 8}`;
   const openAddMemberPage = () => navigate('/add-member');
-<<<<<<< HEAD
-  const openViewMemberPage = () => navigate('/members');
-=======
->>>>>>> parent of 006c271 (feat: "view members" button)
+  const openViewMembersPage = () => navigate('/view-members');
 
   return (
     <div className="chat-page">
@@ -102,13 +99,22 @@ const ChatPage = () => {
           <h1 className="chat-app-title">SyncSphere</h1>
         </div>
         <div className="chat-header-right">
-          <button
-            className="chat-add-member-btn"
-            onClick={openAddMemberPage}
-            type="button"
-          >
-            Add member
-          </button>
+          <div className="chat-member-actions">
+            <button
+              className="chat-add-member-btn"
+              onClick={openAddMemberPage}
+              type="button"
+            >
+              Add members
+            </button>
+            <button
+              className="chat-view-members-btn"
+              onClick={openViewMembersPage}
+              type="button"
+            >
+              View members
+            </button>
+          </div>
           <div className="chat-user-mini">
             <div className={`chat-user-avatar-sm ${avatarTone(user?.name || '')}`}>
               {user?.name?.[0].toUpperCase()}{user?.name?.split(' ')[1]?.[0]?.toUpperCase() || ''}

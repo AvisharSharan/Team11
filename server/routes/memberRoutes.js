@@ -1,11 +1,11 @@
-import express from 'express';
-import {
+const express = require('express');
+const {
     listMembers,
     getMember,
     createMember,
     deleteMember,
-} from '../controllers/memberController.js';
-import { upload } from '../middleware/upload.js';
+} = require('../controllers/memberController');
+const { upload } = require('../middleware/upload');
 
 const router = express.Router();
 
@@ -14,4 +14,4 @@ router.get('/:id', getMember);
 router.post('/', upload.single('profileImage'), createMember);
 router.delete('/:id', deleteMember);
 
-export default router;
+module.exports = router;

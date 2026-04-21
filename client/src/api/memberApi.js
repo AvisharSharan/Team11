@@ -1,20 +1,22 @@
 import api from './axiosInstance';
 
-export const uploadMemberPhoto = async (file) => {
-    const formData = new FormData();
-    formData.append('file', file);
-
-    const { data } = await api.post('/upload', formData);
-    return data;
-};
-
-export const createMember = async (payload) => {
-    const { data } = await api.post('/members', payload);
+export const createMember = async (formData) => {
+    const { data } = await api.post('/members', formData);
     return data;
 };
 
 export const fetchAllMembers = async () => {
     const { data } = await api.get('/members');
+    return data;
+};
+
+export const fetchMemberById = async (memberId) => {
+    const { data } = await api.get(`/members/${memberId}`);
+    return data;
+};
+
+export const deleteMember = async (memberId) => {
+    const { data } = await api.delete(`/members/${memberId}`);
     return data;
 };
 

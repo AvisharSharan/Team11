@@ -3,11 +3,8 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import AuthPage from './pages/AuthPage';
 import ChatPage from './pages/ChatPage';
 import AddMemberPage from './pages/AddMemberPage';
-<<<<<<< HEAD
-import MemberDetailsPage from './pages/MemberDetailsPage';
 import ViewMemberPage from './pages/ViewMemberPage';
-=======
->>>>>>> parent of 006c271 (feat: "view members" button)
+import MemberDetailsPage from './pages/MemberDetailsPage';
 import useAuthStore from './store/useAuthStore';
 
 const PrivateRoute = ({ children }) => {
@@ -16,7 +13,6 @@ const PrivateRoute = ({ children }) => {
 };
 
 function App() {
-<<<<<<< HEAD
     return (
         <BrowserRouter>
             <Routes>
@@ -39,18 +35,18 @@ function App() {
                     }
                 />
                 <Route
-                    path="/members/:id"
+                    path="/view-members"
                     element={
                         <PrivateRoute>
-                            <MemberDetailsPage />
+                            <ViewMemberPage />
                         </PrivateRoute>
                     }
                 />
                 <Route
-                    path="/members"
+                    path="/members/:memberId"
                     element={
                         <PrivateRoute>
-                            <ViewMemberPage />
+                            <MemberDetailsPage />
                         </PrivateRoute>
                     }
                 />
@@ -58,33 +54,6 @@ function App() {
             </Routes>
         </BrowserRouter>
     );
-=======
-  return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/login" element={<AuthPage />} />
-        <Route path="/register" element={<AuthPage />} />
-        <Route
-          path="/chat"
-          element={
-            <PrivateRoute>
-              <ChatPage />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/add-member"
-          element={
-            <PrivateRoute>
-              <AddMemberPage />
-            </PrivateRoute>
-          }
-        />
-        <Route path="*" element={<Navigate to="/chat" replace />} />
-      </Routes>
-    </BrowserRouter>
-  );
->>>>>>> parent of 006c271 (feat: "view members" button)
 }
 
 export default App;

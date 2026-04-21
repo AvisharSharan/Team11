@@ -1,78 +1,83 @@
 .member-details-page {
     min-height: 100vh;
-    padding: 32px 24px;
-    background: #f8fafc;
+    padding: 28px 18px;
+    background:
+        radial-gradient(800px 360px at -10% -10%, #e7f6ff 0%, transparent 60%),
+        radial-gradient(800px 360px at 110% 120%, #e8fff4 0%, transparent 62%),
+        #f8faf9;
 }
 
 .member-details-card {
-    max-width: 880px;
+    max-width: 1040px;
     margin: 0 auto;
     background: #ffffff;
-    border-radius: 12px;
-    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
-    padding: 28px 28px 36px;
+    border: 1px solid #dfe8e4;
+    border-radius: 20px;
+    box-shadow: 0 16px 36px rgba(16, 41, 34, 0.08);
+    padding: 24px;
 }
 
 .member-details-head {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: space-between;
-    margin-bottom: 24px;
-    gap: 16px;
+    gap: 12px;
     flex-wrap: wrap;
 }
 
 .member-details-head h1 {
     margin: 0;
-    font-size: 1.75rem;
-    color: #0f172a;
-    font-weight: 600;
+    font-size: 1.3rem;
+    color: #143327;
+    font-weight: 700;
 }
 
 .member-details-back-btn {
-    padding: 9px 16px;
-    border: 1px solid #cbd5e1;
+    height: 38px;
+    padding: 0 16px;
+    border: 1px solid #d5e8de;
     background: #ffffff;
-    border-radius: 8px;
+    border-radius: 999px;
     cursor: pointer;
-    color: #334155;
-    font-size: 0.9rem;
-    transition: background 0.15s, border-color 0.15s;
+    color: #305248;
+    font-size: 0.85rem;
+    font-weight: 700;
 }
 
 .member-details-back-btn:hover {
-    background: #f1f5f9;
-    border-color: #94a3b8;
+    background: #f6faf8;
 }
 
 .member-details-status {
     text-align: center;
-    color: #64748b;
-    padding: 32px 0;
+    color: #567169;
+    padding: 28px 0 12px;
     font-size: 0.95rem;
 }
 
 .member-details-error {
-    color: #dc2626;
+    color: #a1133a;
 }
 
 .member-details-hero {
-    display: flex;
-    gap: 24px;
-    padding: 24px;
-    background: #f8fafc;
-    border: 1px solid #e2e8f0;
-    border-radius: 12px;
-    margin-bottom: 20px;
+    display: grid;
+    grid-template-columns: 200px minmax(0, 1fr);
+    gap: 20px;
+    padding: 18px;
+    background: #f6faf8;
+    border: 1px solid #dfe8e4;
+    border-radius: 18px;
+    margin-top: 18px;
 }
 
 .member-details-image-wrap {
-    width: 160px;
-    height: 160px;
-    border-radius: 12px;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    border-radius: 22px;
     overflow: hidden;
-    background: #e2e8f0;
-    flex-shrink: 0;
+    background: linear-gradient(180deg, #edf6f3, #f7fbf9);
+    display: grid;
+    place-items: center;
 }
 
 .member-details-image {
@@ -82,31 +87,57 @@
     display: block;
 }
 
+.member-details-avatar {
+    width: 88px;
+    height: 88px;
+    border-radius: 24px;
+    display: grid;
+    place-items: center;
+    color: #ffffff;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    font-size: 1rem;
+}
+
 .member-details-hero-info {
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 8px;
     min-width: 0;
+    justify-content: center;
+}
+
+.member-details-team-badge {
+    width: fit-content;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: #f0f8f5;
+    color: #0f7c5a;
+    font-size: 0.76rem;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
 }
 
 .member-details-name {
     margin: 0;
-    font-size: 1.5rem;
-    color: #0f172a;
-    font-weight: 600;
+    font-size: 1.8rem;
+    color: #143327;
+    font-weight: 800;
 }
 
 .member-details-role {
-    margin: 0 0 8px;
+    margin: 0;
     font-size: 1rem;
-    color: #64748b;
+    color: #567169;
 }
 
 .member-details-contact-link {
-    color: #2563eb;
+    color: #0f7c5a;
     text-decoration: none;
-    font-size: 0.9rem;
+    font-size: 0.95rem;
     word-break: break-all;
+    font-weight: 700;
 }
 
 .member-details-contact-link:hover {
@@ -116,16 +147,16 @@
 .member-details-section {
     margin-top: 20px;
     padding-top: 20px;
-    border-top: 1px solid #e2e8f0;
+    border-top: 1px solid #dfe8e4;
 }
 
 .member-details-section h3 {
     margin: 0 0 12px;
-    font-size: 1rem;
-    font-weight: 600;
-    color: #0f172a;
+    font-size: 0.9rem;
+    font-weight: 800;
+    color: #305248;
     text-transform: uppercase;
-    letter-spacing: 0.04em;
+    letter-spacing: 0.06em;
 }
 
 .member-details-bio {
@@ -140,15 +171,15 @@
     margin: 0;
     display: grid;
     grid-template-columns: 1fr;
-    gap: 10px;
+    gap: 12px;
 }
 
 .member-details-meta-row {
     display: grid;
-    grid-template-columns: 180px 1fr;
+    grid-template-columns: 180px minmax(0, 1fr);
     gap: 16px;
-    padding: 10px 0;
-    border-bottom: 1px solid #f1f5f9;
+    padding: 12px 0;
+    border-bottom: 1px solid #edf3f0;
 }
 
 .member-details-meta-row:last-child {
@@ -156,22 +187,22 @@
 }
 
 .member-details-meta dt {
-    color: #64748b;
+    color: #567169;
     font-size: 0.875rem;
-    font-weight: 500;
+    font-weight: 700;
 }
 
 .member-details-meta dd {
     margin: 0;
-    color: #0f172a;
-    font-size: 0.9rem;
-    word-break: break-all;
+    color: #143327;
+    font-size: 0.92rem;
+    word-break: break-word;
 }
 
 .member-details-mono {
     font-family: 'JetBrains Mono', 'Fira Code', 'Menlo', monospace;
-    font-size: 0.85rem;
-    color: #334155;
+    font-size: 0.84rem;
+    color: #305248;
 }
 
 .member-details-actions {
@@ -186,7 +217,7 @@
     border: 1px solid #fecaca;
     background: #ffffff;
     color: #dc2626;
-    border-radius: 8px;
+    border-radius: 999px;
     font-size: 0.9rem;
     cursor: pointer;
     transition: background 0.15s, border-color 0.15s, opacity 0.15s;
@@ -202,23 +233,21 @@
     cursor: not-allowed;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 720px) {
     .member-details-page {
-        padding: 16px 12px;
+        min-height: 100dvh;
+        padding: 14px;
     }
+
     .member-details-card {
-        padding: 20px 16px 28px;
+        padding: 16px;
+        border-radius: 16px;
     }
+
     .member-details-hero {
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-        padding: 20px 16px;
+        grid-template-columns: 1fr;
     }
-    .member-details-image-wrap {
-        width: 140px;
-        height: 140px;
-    }
+
     .member-details-meta-row {
         grid-template-columns: 1fr;
         gap: 4px;

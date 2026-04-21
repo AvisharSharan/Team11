@@ -69,6 +69,7 @@ const io = new Server(server, {
 // ─── Middleware ────────────────────────────────────────────────────────────────
 app.use(cors({ origin: corsOrigin, credentials: true }));
 app.use(express.json());
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Socket.io Middleware for Authentication
 io.use((socket, next) => {
