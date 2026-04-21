@@ -308,23 +308,6 @@ ul { list-style: none; }
   border-color: #b6dacb;
 }
 
-.chat-view-member-btn {
-  height: 36px;
-  padding: 0 14px;
-  border-radius: 999px;
-  border: 1px solid #c9def0;
-  background: #f2f8fe;
-  color: #1f5f96;
-  font-size: 0.84rem;
-  font-weight: 700;
-  transition: all 0.2s;
-}
-
-.chat-view-member-btn:hover {
-  background: #e7f2fe;
-  border-color: #aacbe7;
-}
-
 .chat-menu-toggle {
   display: none;
   width: 36px;
@@ -447,12 +430,6 @@ ul { list-style: none; }
     font-size: 0.8rem;
   }
 
-  .chat-view-member-btn {
-    height: 34px;
-    padding: 0 12px;
-    font-size: 0.8rem;
-  }
-
   .chat-main {
     flex-direction: column;
   }
@@ -526,77 +503,6 @@ ul { list-style: none; }
   }
 
   .add-member-head {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-}
-
-/* View member page */
-.view-member-page {
-  min-height: 100vh;
-  padding: 28px 18px;
-  background:
-    radial-gradient(700px 320px at -8% -12%, #eaf4ff 0%, transparent 62%),
-    radial-gradient(700px 320px at 108% 112%, #eef7ff 0%, transparent 60%),
-    #f8faf9;
-}
-
-.view-member-card {
-  max-width: 760px;
-  margin: 0 auto;
-  background: #ffffff;
-  border: 1px solid #d9e5f1;
-  border-radius: 18px;
-  box-shadow: 0 14px 34px rgba(20, 48, 85, 0.08);
-  padding: 22px;
-}
-
-.view-member-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-}
-
-.view-member-head h1 {
-  margin: 0;
-  font-size: 1.2rem;
-  color: #143327;
-}
-
-.view-member-back-btn {
-  height: 36px;
-  padding: 0 14px;
-  border-radius: 999px;
-  border: 1px solid #d9e5f1;
-  background: #ffffff;
-  color: #335574;
-  font-size: 0.85rem;
-  font-weight: 700;
-}
-
-.view-member-back-btn:hover {
-  background: #f5f9fe;
-}
-
-.view-member-copy {
-  margin-top: 14px;
-  color: #55726a;
-  line-height: 1.6;
-}
-
-@media (max-width: 640px) {
-  .view-member-page {
-    min-height: 100dvh;
-    padding: 14px;
-  }
-
-  .view-member-card {
-    padding: 16px;
-    border-radius: 14px;
-  }
-
-  .view-member-head {
     flex-direction: column;
     align-items: flex-start;
   }
