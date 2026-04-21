@@ -78,6 +78,7 @@ const ChatPage = () => {
   const closeSidebar = () => setSidebarOpen(false);
   const avatarTone = (name = '') => `tone-${name.charCodeAt(0) % 8}`;
   const openAddMemberPage = () => navigate('/add-member');
+  const openViewMemberPage = () => navigate('/view-member');
 
   return (
     <div className="chat-page">
@@ -104,6 +105,13 @@ const ChatPage = () => {
             type="button"
           >
             Add member
+          </button>
+          <button
+            className="chat-view-member-btn"
+            onClick={openViewMemberPage}
+            type="button"
+          >
+            View member
           </button>
           <div className="chat-user-mini">
             <div className={`chat-user-avatar-sm ${avatarTone(user?.name || '')}`}>
