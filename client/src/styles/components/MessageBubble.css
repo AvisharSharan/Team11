@@ -1,0 +1,150 @@
+.msg-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.msg-sent { justify-content: flex-end; }
+.msg-received { justify-content: flex-start; }
+
+.msg-avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 999px;
+  color: #fff;
+  font-size: 0.65rem;
+  font-weight: 700;
+  display: grid;
+  place-items: center;
+  margin-top: 0.1rem;
+  flex-shrink: 0;
+}
+
+.msg-recv-body,
+.msg-sent-body {
+  max-width: 78%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.msg-sent-body { align-items: flex-end; }
+
+.msg-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.msg-sender-name {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #143327;
+}
+
+.msg-time-recv,
+.msg-time-sent {
+  font-size: 0.68rem;
+  color: #7a9086;
+}
+
+.bubble-received,
+.bubble-sent {
+  padding: 0.55rem 0.72rem;
+  border-radius: 16px;
+  font-size: 0.86rem;
+  line-height: 1.4;
+  word-break: break-word;
+  white-space: pre-wrap;
+}
+
+.bubble-received {
+  background: #ffffff;
+  border: 1px solid #dfe8e4;
+  color: #143327;
+}
+
+.bubble-sent {
+  background: #0f7c5a;
+  color: #fff;
+}
+
+/* File content styles */
+.chat-img-preview {
+  max-width: 280px;
+  max-height: 200px;
+  width: auto;
+  height: auto;
+  border-radius: 8px;
+  display: block;
+  margin-bottom: 0.4rem;
+  cursor: pointer;
+  transition: opacity 0.2s;
+  object-fit: contain;
+}
+
+.chat-img-preview:hover {
+  opacity: 0.9;
+}
+
+.file-download-link {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(0, 0, 0, 0.05);
+  padding: 0.6rem 0.8rem;
+  border-radius: 8px;
+  text-decoration: none;
+  color: inherit;
+  font-weight: 500;
+  transition: background 0.2s;
+}
+
+.bubble-sent .file-download-link {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.file-download-link:hover {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.bubble-sent .file-download-link:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.file-icon {
+  width: 20px;
+  height: 20px;
+}
+
+.file-download-btn-wrapper {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+  display: block;
+}
+
+.file-name-text {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px;
+}
+
+.bubble-text {
+  margin: 0;
+}
+
+@media (max-width: 768px) {
+  .msg-recv-body,
+  .msg-sent-body { max-width: 88%; }
+
+  .bubble-received,
+  .bubble-sent { font-size: 0.82rem; }
+}
