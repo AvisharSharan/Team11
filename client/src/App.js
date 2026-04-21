@@ -7,44 +7,44 @@ import ViewMemberPage from './pages/ViewMemberPage';
 import useAuthStore from './store/useAuthStore';
 
 const PrivateRoute = ({ children }) => {
-  const { user } = useAuthStore();
-  return user ? children : <Navigate to="/login" replace />;
+    const { user } = useAuthStore();
+    return user ? children : <Navigate to="/login" replace />;
 };
 
 function App() {
-  return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/login" element={<AuthPage />} />
-        <Route path="/register" element={<AuthPage />} />
-        <Route
-          path="/chat"
-          element={
-            <PrivateRoute>
-              <ChatPage />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/add-member"
-          element={
-            <PrivateRoute>
-              <AddMemberPage />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/view-member"
-          element={
-            <PrivateRoute>
-              <ViewMemberPage />
-            </PrivateRoute>
-          }
-        />
-        <Route path="*" element={<Navigate to="/chat" replace />} />
-      </Routes>
-    </BrowserRouter>
-  );
+    return (
+        <BrowserRouter>
+            <Routes>
+                <Route path="/login" element={<AuthPage />} />
+                <Route path="/register" element={<AuthPage />} />
+                <Route
+                    path="/chat"
+                    element={
+                        <PrivateRoute>
+                            <ChatPage />
+                        </PrivateRoute>
+                    }
+                />
+                <Route
+                    path="/add-member"
+                    element={
+                        <PrivateRoute>
+                            <AddMemberPage />
+                        </PrivateRoute>
+                    }
+                />
+                <Route
+                    path="/members"
+                    element={
+                        <PrivateRoute>
+                            <ViewMemberPage />
+                        </PrivateRoute>
+                    }
+                />
+                <Route path="*" element={<Navigate to="/chat" replace />} />
+            </Routes>
+        </BrowserRouter>
+    );
 }
 
 export default App;
