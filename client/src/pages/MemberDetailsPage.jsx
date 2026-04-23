@@ -1,12 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { fetchMemberById } from '../api/memberApi';
 import '../styles/MemberDetailsPage.css';
 
-const teamName = 'Team 11';
-
 const MemberDetailsPage = () => {
-  const navigate = useNavigate();
   const { memberId } = useParams();
   const [member, setMember] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -32,78 +29,118 @@ const MemberDetailsPage = () => {
 
   const imageSrc = member?.profileImage || member?.photoUrl || '';
 
+  const parseHobbies = (hobbiesStr) => {
+    if (!hobbiesStr) return [];
+    return hobbiesStr.split(',').map((h) => h.trim()).filter(Boolean);
+  };
+
+  const showValue = (value) => {
+    if (value === null || value === undefined) return '-';
+    const trimmed = String(value).trim();
+    return trimmed ? trimmed : '-';
+  };
+
+  const hobbies = member ? parseHobbies(member.hobbies) : [];
+
   return (
     <div className="member-details-page">
-      <main className="member-details-card">
-        <header className="member-details-head">
-          <div>
-            <h1>Member details</h1>
-          </div>
-          <button type="button" className="member-details-back-btn" onClick={() => navigate('/view-members')}>
-            Back to members
-          </button>
-        </header>
-
-        {loading ? <p className="member-details-status">Loading member details...</p> : null}
-        {error ? <p className="member-details-status member-details-error">{error}</p> : null}
+      <div className="member-details-container">
+        {loading ? <p className="member-details-loading">Loading member details...</p> : null}
+        {error ? <p className="member-details-error">{error}</p> : null}
 
         {!loading && !error && member ? (
           <>
-            <section className="member-details-hero">
-              <div className="member-details-image-wrap">
-                {imageSrc ? (
-                  <img src={imageSrc} alt={member.name} className="member-details-image" />
+            <div className="member-details-image-section">
+              {imageSrc ? (
+                <img src={imageSrc} alt={member.name} className="member-details-image" />
+              ) : (
+                <div className="member-details-placeholder">No Image</div>
+              )}
+            </div>
+
+            <div className="member-details-info">
+              <div className="member-details-summary">
+                <h1 className="member-details-name">{showValue(member.name)}</h1>
+                <p className="member-details-year">
+                  {showValue(member.degree)} - {showValue(member.year)}
+                </p>
+              </div>
+
+              <div className="member-details-meta">
+                <div className="meta-row">
+                  <span className="meta-label">Team:</span>
+                  <span className="meta-value">{showValue(member.teamName)}</span>
+                </div>
+
+                <div className="meta-row">
+                  <span className="meta-label">Roll Number:</span>
+                  <span className="meta-value">{showValue(member.rollNo || member.rollNumber)}</span>
+                </div>
+
+                <div className="meta-row">
+                  <span className="meta-label">Role:</span>
+                  <span className="meta-value">{showValue(member.role)}</span>
+                </div>
+
+                <div className="meta-row">
+                  <span className="meta-label">Email:</span>
+                  <span className="meta-value">{showValue(member.email)}</span>
+                </div>
+
+                <div className="meta-row">
+                  <span className="meta-label">Projects:</span>
+                  <span className="meta-value">{showValue(member.aboutProject)}</span>
+                </div>
+
+                <div className="meta-row">
+                  <span className="meta-label">Certificate:</span>
+                  <span className="meta-value">{showValue(member.certificate)}</span>
+                </div>
+
+                <div className="meta-row">
+                  <span className="meta-label">Internship:</span>
+                  <span className="meta-value">{showValue(member.internship)}</span>
+                </div>
+
+                <div className="meta-row">
+                  <span className="meta-label">About Your Aims:</span>
+                  <span className="meta-value">{showValue(member.aboutAim)}</span>
+                </div>
+
+                <div className="meta-row">
+                  <span className="meta-label">Member ID:</span>
+                  <span className="meta-value">{showValue(member._id)}</span>
+                </div>
+
+                <div className="meta-row">
+                  <span className="meta-label">Created At:</span>
+                  <span className="meta-value">{member.createdAt ? new Date(member.createdAt).toLocaleString() : '-'}</span>
+                </div>
+
+                <div className="meta-row">
+                  <span className="meta-label">Updated At:</span>
+                  <span className="meta-value">{member.updatedAt ? new Date(member.updatedAt).toLocaleString() : '-'}</span>
+                </div>
+              </div>
+
+              <div className="member-hobbies">
+                <span className="hobbies-label">Hobbies:</span>
+                {hobbies.length > 0 ? (
+                  <div className="hobbies-list">
+                    {hobbies.map((hobby, index) => (
+                      <span key={index} className="hobby-tag">
+                        {hobby}
+                      </span>
+                    ))}
+                  </div>
                 ) : (
-                  <div className="member-details-avatar tone-6">{member.name?.[0]?.toUpperCase()}</div>
+                  <span className="meta-value">-</span>
                 )}
               </div>
-
-              <div className="member-details-hero-info">
-                <span className="member-details-team-badge">{member.teamName || teamName}</span>
-                <h2 className="member-details-name">{member.name}</h2>
-                <p className="member-details-role">{member.role}</p>
-                <a className="member-details-contact-link" href={`mailto:${member.email}`}>
-                  {member.email}
-                </a>
-              </div>
-            </section>
-
-            <section className="member-details-section">
-              <h3>All details</h3>
-              <dl className="member-details-meta">
-                <div className="member-details-meta-row">
-                  <dt>Team</dt>
-                  <dd>{member.teamName || teamName}</dd>
-                </div>
-                <div className="member-details-meta-row">
-                  <dt>Roll no.</dt>
-                  <dd>{member.rollNo || member.rollNumber}</dd>
-                </div>
-                <div className="member-details-meta-row">
-                  <dt>Email</dt>
-                  <dd>{member.email}</dd>
-                </div>
-                <div className="member-details-meta-row">
-                  <dt>Role</dt>
-                  <dd>{member.role}</dd>
-                </div>
-                <div className="member-details-meta-row">
-                  <dt>Member ID</dt>
-                  <dd className="member-details-mono">{member._id}</dd>
-                </div>
-                <div className="member-details-meta-row">
-                  <dt>Created</dt>
-                  <dd>{member.createdAt ? new Date(member.createdAt).toLocaleString() : '-'}</dd>
-                </div>
-                <div className="member-details-meta-row">
-                  <dt>Updated</dt>
-                  <dd>{member.updatedAt ? new Date(member.updatedAt).toLocaleString() : '-'}</dd>
-                </div>
-              </dl>
-            </section>
+            </div>
           </>
         ) : null}
-      </main>
+      </div>
     </div>
   );
 };

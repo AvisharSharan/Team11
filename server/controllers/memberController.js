@@ -8,15 +8,20 @@ const uploadsDir = path.join(__dirname, '..', 'uploads');
 const normalizeMember = (member) => {
     if (!member) return member;
 
-    const profileImage = member.profileImage || member.photoUrl || '';
-    const rollNo = member.rollNo || member.rollNumber || '';
+    const profileImage = member.profileImage || member.photoUrl || member.image || '';
+    const rollNo = member.rollNo || member.rollNumber || member.roll || '';
+    const aboutProject = member.aboutProject || member.project || '';
 
     return {
         ...member,
         rollNo,
         rollNumber: member.rollNumber || rollNo,
+        roll: member.roll || rollNo,
+        aboutProject,
+        project: member.project || aboutProject,
         profileImage,
         photoUrl: member.photoUrl || profileImage,
+        image: member.image || profileImage,
         teamName: member.teamName || 'Team 11',
     };
 };
@@ -24,11 +29,8 @@ const normalizeMember = (member) => {
 const listMembers = async (req, res, next) => {
     try {
         const members = await Member.find().sort({ createdAt: -1 }).lean();
-        res.status(200).json({
-            success: true,
-            count: members.length,
-            data: members.map(normalizeMember),
-        });
+        // Return plain array so GET /api/members is directly readable in browser.
+        res.status(200).json(members.map(normalizeMember));
     } catch (err) {
         next(err);
     }
@@ -46,7 +48,8 @@ const getMember = async (req, res, next) => {
             return res.status(404).json({ success: false, message: 'Member not found' });
         }
 
-        res.status(200).json({ success: true, data: normalizeMember(member) });
+        // Return plain object so GET /api/members/:id is directly readable in browser.
+        res.status(200).json(normalizeMember(member));
     } catch (err) {
         next(err);
     }
@@ -54,13 +57,27 @@ const getMember = async (req, res, next) => {
 
 const createMember = async (req, res, next) => {
     try {
-        const { name, rollNo, rollNumber, role, email, teamName } = req.body;
+        const { 
+            name, 
+            rollNo, 
+            rollNumber, 
+            year,
+            degree,
+            aboutProject,
+            hobbies,
+            certificate,
+            internship,
+            aboutAim,
+            role, 
+            email, 
+            teamName 
+        } = req.body;
         const resolvedRollNo = rollNo || rollNumber;
 
-        if (!name || !email || !resolvedRollNo || !role) {
+        if (!name || !resolvedRollNo) {
             return res.status(400).json({
                 success: false,
-                message: 'Name, email, roll no, and role are required',
+                message: 'Name and roll number are required',
             });
         }
 
@@ -70,9 +87,16 @@ const createMember = async (req, res, next) => {
 
         const member = await Member.create({
             name,
-            email,
             rollNo: resolvedRollNo,
-            role,
+            year: year || '',
+            degree: degree || '',
+            aboutProject: aboutProject || '',
+            hobbies: hobbies || '',
+            certificate: certificate || '',
+            internship: internship || '',
+            aboutAim: aboutAim || '',
+            email: email || '',
+            role: role || '',
             profileImage: `/uploads/${req.file.filename}`,
             teamName: teamName || 'Team 11',
         });

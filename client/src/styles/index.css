@@ -302,17 +302,17 @@ ul { list-style: none; }
   height: 36px;
   padding: 0 14px;
   border-radius: 999px;
-  border: 1px solid #cfe6dc;
-  background: #f3fbf7;
-  color: #0f6f52;
+  border: 1px solid #d9e5df;
+  background: #ffffff;
+  color: #305248;
   font-size: 0.84rem;
   font-weight: 700;
   transition: all 0.2s;
 }
 
 .chat-add-member-btn:hover {
-  background: #e7f6ef;
-  border-color: #b6dacb;
+  background: #f6faf8;
+  border-color: #c4d6ce;
 }
 
 .chat-view-members-btn {
@@ -328,6 +328,23 @@ ul { list-style: none; }
 }
 
 .chat-view-members-btn:hover {
+  background: #f6faf8;
+  border-color: #c4d6ce;
+}
+
+.chat-team-management-btn {
+  height: 36px;
+  padding: 0 14px;
+  border-radius: 999px;
+  border: 1px solid #d9e5df;
+  background: #ffffff;
+  color: #305248;
+  font-size: 0.84rem;
+  font-weight: 700;
+  transition: all 0.2s;
+}
+
+.chat-team-management-btn:hover {
   background: #f6faf8;
   border-color: #c4d6ce;
 }
@@ -455,6 +472,12 @@ ul { list-style: none; }
   }
 
   .chat-view-members-btn {
+    height: 34px;
+    padding: 0 12px;
+    font-size: 0.8rem;
+  }
+
+  .chat-team-management-btn {
     height: 34px;
     padding: 0 12px;
     font-size: 0.8rem;

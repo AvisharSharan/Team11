@@ -77,8 +77,7 @@ const ChatPage = () => {
   const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
   const closeSidebar = () => setSidebarOpen(false);
   const avatarTone = (name = '') => `tone-${name.charCodeAt(0) % 8}`;
-  const openAddMemberPage = () => navigate('/add-member');
-  const openViewMembersPage = () => navigate('/view-members');
+  const openTeamManagement = () => navigate('/team-management');
 
   return (
     <div className="chat-page">
@@ -101,18 +100,11 @@ const ChatPage = () => {
         <div className="chat-header-right">
           <div className="chat-member-actions">
             <button
-              className="chat-add-member-btn"
-              onClick={openAddMemberPage}
+              className="chat-team-management-btn"
+              onClick={openTeamManagement}
               type="button"
             >
-              Add members
-            </button>
-            <button
-              className="chat-view-members-btn"
-              onClick={openViewMembersPage}
-              type="button"
-            >
-              View members
+              Team Management
             </button>
           </div>
           <div className="chat-user-mini">

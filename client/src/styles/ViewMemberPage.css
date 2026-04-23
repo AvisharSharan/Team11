@@ -1,209 +1,157 @@
 .view-member-page {
-    min-height: 100vh;
-    padding: 28px 18px;
-    background:
-        radial-gradient(800px 360px at -10% -10%, #e7f6ff 0%, transparent 60%),
-        radial-gradient(800px 360px at 110% 120%, #e8fff4 0%, transparent 62%),
-        #f8faf9;
+  min-height: 100vh;
+  padding: 40px 20px;
+  background: linear-gradient(135deg, #f5f5f5 0%, #f0f0f0 100%);
 }
 
-.view-member-card {
-    max-width: 1180px;
-    margin: 0 auto;
-    background: #ffffff;
-    border: 1px solid #dfe8e4;
-    border-radius: 20px;
-    box-shadow: 0 16px 36px rgba(16, 41, 34, 0.08);
-    padding: 24px;
+.view-member-container {
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
-.view-member-head {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 12px;
-    flex-wrap: wrap;
+.view-member-title {
+  text-align: center;
+  font-size: 2rem;
+  font-weight: 600;
+  color: #1e88e5;
+  margin: 0 0 50px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
 }
 
-.view-member-head h1 {
-    margin: 0;
-    font-size: 1.3rem;
-    color: #143327;
-    font-weight: 700;
-}
-
-.view-member-team {
-    margin-top: 8px;
-    color: #567169;
-    line-height: 1.6;
-}
-
-.view-member-team strong {
-    color: #143327;
-}
-
-.view-member-back-btn {
-    height: 38px;
-    padding: 0 16px;
-    border: 1px solid #d5e8de;
-    background: #ffffff;
-    border-radius: 999px;
-    cursor: pointer;
-    color: #305248;
-    font-size: 0.85rem;
-    font-weight: 700;
-}
-
-.view-member-back-btn:hover {
-    background: #f6faf8;
-}
-
-.view-member-status {
-    text-align: center;
-    color: #567169;
-    padding: 28px 0 12px;
-    font-size: 0.95rem;
-}
-
-.view-member-error {
-    color: #a1133a;
+.view-member-success,
+.view-member-error,
+.view-member-loading {
+  text-align: center;
+  padding: 12px 16px;
+  margin: 0 0 20px;
+  border-radius: 6px;
+  font-size: 0.95rem;
 }
 
 .view-member-success {
-    color: #166534;
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.view-member-error {
+  background: #ffebee;
+  color: #c62828;
+}
+
+.view-member-loading {
+  background: #e3f2fd;
+  color: #1565c0;
 }
 
 .view-member-empty {
-    margin-top: 18px;
-    padding: 24px;
-    border: 1px dashed #d5e8de;
-    border-radius: 18px;
-    color: #567169;
-    text-align: center;
-    background: #f6faf8;
+  text-align: center;
+  padding: 40px 20px;
+  background: #ffffff;
+  border: 2px dashed #e0e0e0;
+  border-radius: 12px;
+  color: #999999;
+  font-size: 1.05rem;
 }
 
 .member-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-    gap: 18px;
-    margin-top: 18px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 24px;
 }
 
-.member-tile {
-    background: #ffffff;
-    border: 1px solid #dfe8e4;
-    border-radius: 18px;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+.member-card {
+  background: #ffffff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
 }
 
-.member-tile:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 12px 28px rgba(16, 41, 34, 0.08);
-    border-color: #c7d8d1;
+.member-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
 }
 
-.member-tile-image-wrap {
-    width: 100%;
-    aspect-ratio: 1 / 1;
-    background: linear-gradient(180deg, #edf6f3, #f7fbf9);
-    overflow: hidden;
-    display: grid;
-    place-items: center;
+.member-card-image {
+  width: 100%;
+  height: 200px;
+  background: #f0f0f0;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.member-tile-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
+.member-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
-.member-tile-avatar {
-    width: 78px;
-    height: 78px;
-    border-radius: 22px;
-    display: grid;
-    place-items: center;
-    color: #ffffff;
-    font-weight: 800;
-    letter-spacing: 0.04em;
-    font-size: 1rem;
+.member-placeholder {
+  color: #999999;
+  font-size: 0.9rem;
 }
 
-.member-tile-body {
-    padding: 16px;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    min-height: 0;
+.member-card-content {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex-grow: 1;
 }
 
-.member-team-badge {
-    width: fit-content;
-    padding: 4px 10px;
-    border-radius: 999px;
-    background: #f0f8f5;
-    color: #0f7c5a;
-    font-size: 0.76rem;
-    font-weight: 800;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
+.member-name {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #333333;
 }
 
-.member-tile-name {
-    margin: 0;
-    font-size: 1.05rem;
-    color: #143327;
-    font-weight: 700;
+.member-roll {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #999999;
 }
 
-.member-tile-role {
-    margin: 0;
-    font-size: 0.9rem;
-    color: #567169;
+.member-details-btn {
+  padding: 10px 20px;
+  background: #1e88e5;
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  font-weight: 700;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  letter-spacing: 0.5px;
+  margin-top: auto;
 }
 
-.member-tile-roll {
-    margin: 0;
-    font-size: 0.85rem;
-    color: #305248;
-    word-break: break-word;
+.member-details-btn:hover {
+  background: #1565c0;
+  box-shadow: 0 2px 8px rgba(30, 136, 229, 0.3);
 }
 
-.member-tile-btn {
-    margin-top: 8px;
-    height: 38px;
-    width: 100%;
-    border: 1px solid #0f7c5a;
-    background: #0f7c5a;
-    color: #ffffff;
-    border-radius: 999px;
-    font-size: 0.86rem;
-    font-weight: 700;
+.member-details-btn:active {
+  transform: translateY(1px);
 }
 
-.member-tile-btn:hover {
-    background: #0c5f48;
-    border-color: #0c5f48;
-}
+@media (max-width: 768px) {
+  .view-member-page {
+    padding: 20px 16px;
+  }
 
-@media (max-width: 720px) {
-    .view-member-page {
-        min-height: 100dvh;
-        padding: 14px;
-    }
+  .view-member-title {
+    font-size: 1.5rem;
+    margin-bottom: 30px;
+  }
 
-    .view-member-card {
-        padding: 16px;
-        border-radius: 16px;
-    }
-
-    .member-grid {
-        grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
-        gap: 14px;
-    }
+  .member-grid {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 16px;
+  }
 }

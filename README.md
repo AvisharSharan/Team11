@@ -1,171 +1,421 @@
-# 💬 SyncSphere
+# SyncSphere - Team 11
 
-A real-time one-on-one chat messaging web application built with the MERN stack and Socket.io.
+## Project Description
 
----
+**SyncSphere** is a web-based real-time chat application built with the MERN stack (MongoDB, Express, React, Node.js). It provides instant one-on-one messaging between users with a modern, responsive interface and real-time event updates via Socket.io.
+
+This particular deployment for **Team 11** includes an additional **Team Management** feature that allows team members to create and manage team member profiles with rich information including skills, certifications, and project involvement.
+
+### Core Functionality:
+- **Real-time Messaging**: Instant one-on-one chat with typing indicators and persistent conversation history
+- **User Search**: Find and connect with other users to start conversations
+- **Team Management** (Team 11 specific): Create, view, and organize team member profiles with images and detailed information
 
 ## Tech Stack
 
-| Layer | Technology |
-|---|---|
-| Frontend | React.js, React Router v7, Zustand, Axios, Socket.io-client |
-| Backend | Node.js, Express.js |
-| Database | MongoDB, Mongoose |
-| Real-time | Socket.io |
-| Auth | JWT, bcryptjs |
+| Layer | Technology | Version |
+|---|---|---|
+| Frontend | React | 19.2.4 |
+| Frontend | React Router DOM | 7.13.1 |
+| State Management | Zustand | 5.0.11 |
+| HTTP Client | Axios | 1.13.6 |
+| Real-time | Socket.io Client | 4.8.3 |
+| Backend | Node.js + Express | 5.2.1 |
+| Database | MongoDB | 7.1.0 |
+| ODM | Mongoose | 9.2.3 |
+| Authentication | JWT (jsonwebtoken) | 9.0.3 |
+| Passwords | bcryptjs | 3.0.3 |
+| File Upload | Multer | 2.1.1 |
+| Real-time Server | Socket.io | 4.8.3 |
 
----
+## Key Features
 
-## Features
+- **Secure Authentication**: User registration and login with JWT-based session management and bcryptjs password hashing
+- **Real-time Messaging**: One-on-one chat with live typing indicators and persistent conversation history
+- **User Search**: Find other users to start conversations
+- **Responsive Design**: Mobile-friendly UI that works on all screen sizes
+- **Team Management** (Optional): Add-on feature for team member profile management with images and detailed information
+- **Member CRUD**: Create, read, update, and delete team member records (Team 11 feature)
+- **Local File Storage**: Profile images stored securely in the /uploads directory
 
-- **User Authentication** — Register and log in with email and password. Passwords are hashed with bcrypt. Sessions are managed via JWT stored in localStorage.
-- **User Search** — Search for any registered user by name or email to start a new conversation.
-- **One-on-One Messaging** — Send and receive messages in real time. Chat history is persisted in MongoDB and restored on page refresh.
-- **Conversation Sidebar** — Lists all conversations with the other participant's name, last message preview, and timestamp.
-- **Real-Time Delivery** — Messages appear instantly in the recipient's window via Socket.io without any page refresh.
-- **Typing Indicator** — A `• • • Name is typing` indicator appears when the other user is typing, both in the chat window and in the sidebar.
-- **Unread Badges** — Conversations with unread messages show a count badge on the sidebar.
+## Frontend Routes
 
----
+| Route | Purpose | Auth Required | Feature |
+|---|---|---|---|
+| `/login` | User login page | No | Core |
+| `/register` | User registration page | No | Core |
+| `/chat` | Main chat interface | Yes | Core |
+| `/team-management` | Team member management hub | Yes | Team 11 |
+| `/add-member` | Add new team member form | Yes | Team 11 |
+| `/members` | List all team members | Yes | Team 11 |
+| `/members/:memberId` | View single member profile | Yes | Team 11 |
+
+## Member Fields
+
+Members can store the following data:
+
+- name
+- email
+- rollNo
+- role
+- year
+- degree
+- aboutProject
+- hobbies
+- certificate
+- internship
+- aboutAim
+- profileImage
+- teamName
+
+## API Reference
+
+### Core SyncSphere Endpoints
+
+#### Authentication Endpoints
+
+| Method | Endpoint | Description | Auth Required |
+|---|---|---|---|
+| POST | `/api/auth/register` | Register a new user account | No |
+| POST | `/api/auth/login` | Login with email/password | No |
+
+**Example - Register**:
+```bash
+curl -X POST http://localhost:5000/api/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{"email":"user@example.com","password":"password123"}'
+```
+
+#### User Endpoints
+
+| Method | Endpoint | Description | Auth Required |
+|---|---|---|---|
+| GET | `/api/users/search?query={text}` | Search users for chat conversations | Yes |
+
+**Example**:
+```bash
+curl http://localhost:5000/api/users/search?query=john \
+  -H "Authorization: Bearer {your_jwt_token}"
+```
+
+#### Conversation Endpoints
+
+| Method | Endpoint | Description | Auth Required |
+|---|---|---|---|
+| GET | `/api/conversations` | Get all conversations for logged-in user | Yes |
+| POST | `/api/conversations` | Create or open a conversation | Yes |
+
+#### Message Endpoints
+
+| Method | Endpoint | Description | Auth Required |
+|---|---|---|---|
+| GET | `/api/messages/:conversationId` | Get all messages in a conversation | Yes |
+| POST | `/api/messages` | Send a new message | Yes |
+
+### Team 11 - Team Management Endpoints
+
+#### Member Endpoints
+
+| Method | Endpoint | Description | Auth Required |
+|---|---|---|---|
+| GET | `/api/members` | List all team members | Yes |
+| GET | `/api/members/:id` | Get single member details by ID | Yes |
+| POST | `/api/members` | Create new member (with profile image) | Yes |
+| DELETE | `/api/members/:id` | Delete member by ID | Yes |
+
+**Example - Create Member**:
+```bash
+# Using FormData for multipart/form-data with image upload
+curl -X POST http://localhost:5000/api/members \
+  -H "Authorization: Bearer {your_jwt_token}" \
+  -F "name=John Doe" \
+  -F "rollNo=T1001" \
+  -F "year=3" \
+  -F "degree=B.Tech" \
+  -F "profileImage=@/path/to/image.jpg"
+```
+
+**Example - List Members** (can be tested in browser):
+```
+http://localhost:5000/api/members
+```
+
+#### Upload Endpoint (Team 11)
+
+| Method | Endpoint | Description | Auth Required |
+|---|---|---|---|
+| POST | `/api/upload` | Generic file upload endpoint | Yes |
 
 ## Project Structure
 
 ```
-sync-sphere/
-├── client/                  # React frontend
-│   ├── public/
+Team11/
+├── client/
 │   └── src/
 │       ├── api/
-│       │   └── axiosInstance.js      # Axios with auto JWT header
 │       ├── components/
-│       │   ├── ChatWindow.jsx        # Main message view and input
-│       │   ├── MessageBubble.jsx     # Sent/received bubble component
-│       │   ├── Sidebar.jsx           # Conversation list and nav
-│       │   └── UserSearch.jsx        # Search modal for starting chats
 │       ├── pages/
-│       │   ├── AuthPage.jsx          # Combined login/register with tab toggle
-│       │   └── ChatPage.jsx          # Main chat layout with socket setup
 │       ├── socket/
-│       │   └── socket.js             # Socket.io singleton
-│       └── store/
-│           ├── useAuthStore.js       # Zustand auth state
-│           └── useChatStore.js       # Zustand conversations/messages state
-├── server/                  # Express backend
+│       ├── store/
+│       └── styles/
+├── server/
 │   ├── config/
-│   │   └── db.js                     # Mongoose connection
+│   ├── controllers/
 │   ├── middleware/
-│   │   └── authMiddleware.js         # JWT protect middleware
 │   ├── models/
-│   │   ├── User.js
-│   │   ├── Conversation.js
-│   │   └── Message.js
 │   ├── routes/
-│   │   ├── authRoutes.js             # POST /api/auth/register|login
-│   │   ├── userRoutes.js             # GET  /api/users/search
-│   │   ├── conversationRoutes.js     # GET|POST /api/conversations
-│   │   └── messageRoutes.js          # GET|POST /api/messages
-│   └── index.js                      # Express app + Socket.io server
-├── .env
-└── package.json
+│   ├── uploads/
+│   └── utils/
+├── package.json
+└── README.md
 ```
 
----
-
-## Getting Started
+## Setup
 
 ### Prerequisites
 
-- Node.js v18+
-- A MongoDB cluster (MongoDB Atlas or local)
+Before you begin, ensure you have:
 
-### 1. Clone & install
+- **Node.js 18+** - [Download](https://nodejs.org/)
+- **npm** or **yarn** - Comes with Node.js
+- **MongoDB** - Either:
+  - Local MongoDB instance ([Download](https://www.mongodb.com/try/download/community))
+  - MongoDB Atlas cloud database ([Create free account](https://www.mongodb.com/cloud/atlas))
+- **Git** - For cloning the repository
 
-```bash
-git clone https://github.com/your-username/sync-sphere.git
-cd sync-sphere
-npm install
-cd client && npm install
-```
+### Installation Steps
 
-### 2. Configure environment variables
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/AvisharSharan/Team11.git
+   cd Team11
+   ```
 
-Create a `.env` file in the root of the project:
+2. **Install root dependencies**:
+   ```bash
+   npm install
+   ```
 
-```env
-MONGO_URI=your_mongodb_connection_string
-JWT_SECRET=your_jwt_secret_key
-PORT=5000
-```
+3. **Install client dependencies**:
+   ```bash
+   cd client
+   npm install
+   cd ..
+   ```
 
-> **Note:** If your MongoDB password contains special characters (e.g. `!`, `@`, `#`), percent-encode them in the URI. For example `!` → `%21`.
+4. **Create .env file** in the project root:
+   ```bash
+   touch .env
+   ```
 
-### 3. Run the app
+5. **Configure environment variables** - Add these to your `.env` file:
+   ```env
+   # MongoDB Connection
+   MONGO_URI=mongodb://localhost:27017/syncSphere
+   # Or use MongoDB Atlas:
+   # MONGO_URI=mongodb+srv://username:password@cluster.mongodb.net/syncSphere
 
-Open two terminals from the project root:
+   # JWT Secret (use a strong random string)
+   JWT_SECRET=your_super_secret_jwt_key_change_this_in_production
 
-**Terminal 1 — API server (port 5000):**
+   # Server Configuration
+   PORT=5000
+   NODE_ENV=development
+
+   # Client URL (for CORS and Socket.io)
+   CLIENT_URL=http://localhost:3000
+   ```
+
+   **Environment Variables Explained**:
+   - `MONGO_URI`: Connection string to your MongoDB instance
+   - `JWT_SECRET`: Secret key for signing JWT tokens (change this to a strong random string)
+   - `PORT`: Backend server port (default 5000)
+   - `NODE_ENV`: Environment mode (development/production)
+   - `CLIENT_URL`: Frontend URL for cross-origin requests and Socket.io connections
+
+### How to Run the App
+
+The application requires both backend and frontend servers running simultaneously.
+
+**Option 1: Two Terminal Windows** (Recommended for development)
+
+Terminal 1 - Start Backend Server:
 ```bash
 npm run server
 ```
+Backend will start on `http://localhost:5000`
 
-**Terminal 2 — React dev server (port 3000):**
+Terminal 2 - Start Frontend Development Server:
+```bash
+cd client
+npm start
+```
+Frontend will open automatically at `http://localhost:3000`
+
+**Option 2: Concurrently (if configured)**
+
+From root directory:
 ```bash
 npm start
 ```
+This runs both servers if concurrently is configured in root package.json
 
-Then open [http://localhost:3000](http://localhost:3000) in your browser.
+**Access the Application**:
+- **Frontend**: http://localhost:3000
+- **API Base URL**: http://localhost:5000
+- **Member List**: http://localhost:3000/members
+- **Chat**: http://localhost:3000/chat
+- **Test API**: http://localhost:5000/api/members (in browser)
 
----
+## Important Notes
 
-## API Reference
+### About This Deployment
 
-### Auth
+This is a SyncSphere instance deployed for Team 11. In addition to the core chat functionality, this deployment includes a **Team Management** module that provides team member profile management capabilities.
 
-| Method | Endpoint | Description |
-|---|---|---|
-| POST | `/api/auth/register` | Register a new user |
-| POST | `/api/auth/login` | Login and receive a JWT |
+**Core Chat Features** (all users):
+- User registration, login, and search
+- One-on-one real-time messaging
+- Conversation history
+- Typing indicators
 
-### Users
+**Team Management** (Team 11 specific add-on):
+- Member profile creation and display
+- Rich member information storage
+- Member image uploads
 
-| Method | Endpoint | Description |
-|---|---|---|
-| GET | `/api/users/search?query=` | Search users by name or email |
+### Team Member Profiles
 
-### Conversations
+Team member profiles (Team 11 feature) support the following fields:
 
-| Method | Endpoint | Description |
-|---|---|---|
-| GET | `/api/conversations` | Get all conversations for the logged-in user |
-| POST | `/api/conversations` | Start or open a one-on-one conversation |
+- **Basic Info**: name, email, rollNo, role, year, degree
+- **Professional**: certificate, internship, aboutProject
+- **Personal**: hobbies, aboutAim
+- **Media**: profileImage (required for creation)
+- **System**: teamName (default: "Team 11"), timestamps (createdAt, updatedAt)
 
-### Messages
+All fields except `name`, `rollNo`, and `profileImage` are optional.
 
-| Method | Endpoint | Description |
-|---|---|---|
-| GET | `/api/messages/:conversationId` | Get all messages for a conversation |
-| POST | `/api/messages` | Send a new message |
+### File Storage
 
----
+- Profile images are stored locally in `/server/uploads/`
+- Images are served when accessing member details through the API
+- Ensure the uploads folder has write permissions
+- For production, consider using cloud storage (S3, Azure Blob, etc.)
+
+### Authentication
+
+- All protected routes require a valid JWT token in the Authorization header
+- Token is automatically added by the Axios interceptor on the frontend
+- Tokens expire after a configurable time period (see backend JWT middleware)
+- JWT secret should be changed in production to a strong random string
+
+### Database
+
+- MongoDB connection string in `.env` determines whether you use local or cloud MongoDB
+- For local development, ensure MongoDB service is running: `mongod` or use MongoDB Compass
+- Database will be created automatically when the first connection is made
+
+## Troubleshooting
+
+### Issue: "Cannot find module" or dependency errors
+
+**Solution**: 
+```bash
+# Clear node_modules and reinstall
+rm -rf node_modules package-lock.json
+npm install
+
+# For client:
+cd client
+rm -rf node_modules package-lock.json
+npm install
+cd ..
+```
+
+### Issue: MongoDB connection refused
+
+**Solution**:
+- Verify MongoDB is running locally: `mongosh` or check MongoDB Compass
+- Or update `MONGO_URI` in `.env` to use MongoDB Atlas cloud
+- Ensure correct username/password for MongoDB Atlas if using cloud
+
+### Issue: CORS errors or Socket.io connection fails
+
+**Solution**:
+- Verify `CLIENT_URL` in `.env` matches your frontend URL (http://localhost:3000 for local dev)
+- Check that both frontend and backend are running
+- Clear browser cache and hard refresh (Ctrl+Shift+R or Cmd+Shift+R)
+
+### Issue: Member creation fails with image upload
+
+**Solution**:
+- Ensure `/server/uploads/` folder exists and is writable
+- Check that Multer middleware is configured correctly in `server/middleware/upload.js`
+- Verify file size is within limits (typically 5-10MB)
+- Use a valid image format (JPG, PNG, GIF, WebP)
+
+### Issue: Cannot login after registration
+
+**Solution**:
+- Clear local storage and authentication cookies
+- Ensure JWT_SECRET is set correctly in `.env`
+- Verify user was created in MongoDB by checking the users collection
+- Check backend server logs for detailed error messages
+
+## Project Structure
+
+```
+Team11/
+├── client/
+│   ├── public/
+│   │   ├── index.html
+│   │   ├── manifest.json
+│   │   └── robots.txt
+│   ├── src/
+│   │   ├── api/           # Axios API client functions
+│   │   ├── components/    # Reusable React components
+│   │   ├── pages/         # Page components for routes
+│   │   ├── socket/        # Socket.io client setup
+│   │   ├── store/         # Zustand state management stores
+│   │   ├── styles/        # CSS files for pages/components
+│   │   ├── App.js         # Main app component with routing
+│   │   ├── index.js       # React entry point
+│   │   └── setupTests.js  # Test configuration
+│   └── package.json
+│
+├── server/
+│   ├── config/            # Database and configuration files
+│   ├── controllers/       # Route handler logic
+│   ├── middleware/        # Custom middleware (auth, upload, etc.)
+│   ├── models/            # Mongoose schemas
+│   ├── routes/            # Express route definitions
+│   ├── uploads/           # Local storage for uploaded files
+│   ├── utils/             # Utility functions (email, etc.)
+│   ├── index.js           # Express server entry point
+│   └── package.json
+│
+├── .env                   # Environment variables (not in git)
+├── .gitignore
+├── package.json           # Root package.json (for running both client/server)
+└── README.md              # This file
+```
 
 ## Socket.io Events
 
-| Event | Direction | Payload | Description |
-|---|---|---|---|
-| `setup` | Client → Server | `userId` | Registers user to their personal room |
-| `join conversation` | Client → Server | `conversationId` | Joins a conversation room |
-| `leave conversation` | Client → Server | `conversationId` | Leaves a conversation room |
-| `new message` | Client → Server | message object | Broadcasts a message to the room |
-| `message received` | Server → Client | message object | Delivers a new message to recipients |
-| `typing` | Client → Server | `{ conversationId, senderName }` | Notifies others that user is typing |
-| `stop typing` | Client → Server | `{ conversationId }` | Clears the typing indicator |
+The real-time chat uses Socket.io for live updates. Key events include:
 
----
+- **`connect`**: Establish connection to WebSocket server
+- **`messageReceived`**: New message received in real-time
+- **`typingIndicator`**: User is typing notification
+- **`disconnect`**: WebSocket connection closed
 
-## Environment Variables
+Events are configured in [client/src/socket/socket.js](client/src/socket/socket.js)
 
-| Variable | Description |
-|---|---|
-| `MONGO_URI` | MongoDB connection string |
-| `JWT_SECRET` | Secret key used to sign JWT tokens |
-| `PORT` | Port the Express server listens on (default: `5000`) |
+## Getting Help
+
+- Check the troubleshooting section above
+- Review server logs: Run backend with verbose logging
+- Check browser console for client-side errors (F12 → Console tab)
+- Verify all environment variables are set correctly in `.env`
+- Ensure all dependencies are installed: `npm install` in both root and client/

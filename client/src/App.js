@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import AuthPage from './pages/AuthPage';
 import ChatPage from './pages/ChatPage';
+import TeamManagementPage from './pages/TeamManagementPage';
 import AddMemberPage from './pages/AddMemberPage';
 import ViewMemberPage from './pages/ViewMemberPage';
 import MemberDetailsPage from './pages/MemberDetailsPage';
@@ -27,6 +28,14 @@ function App() {
                     }
                 />
                 <Route
+                    path="/team-management"
+                    element={
+                        <PrivateRoute>
+                            <TeamManagementPage />
+                        </PrivateRoute>
+                    }
+                />
+                <Route
                     path="/add-member"
                     element={
                         <PrivateRoute>
@@ -35,7 +44,7 @@ function App() {
                     }
                 />
                 <Route
-                    path="/view-members"
+                    path="/members"
                     element={
                         <PrivateRoute>
                             <ViewMemberPage />

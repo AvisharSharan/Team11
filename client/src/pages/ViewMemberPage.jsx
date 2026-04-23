@@ -3,16 +3,6 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { fetchAllMembers } from '../api/memberApi';
 import '../styles/ViewMemberPage.css';
 
-const teamName = 'Team 11';
-
-const getInitials = (name = '') =>
-  name
-    .split(' ')
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((part) => part[0]?.toUpperCase())
-    .join('');
-
 const ViewMemberPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -43,22 +33,12 @@ const ViewMemberPage = () => {
 
   return (
     <div className="view-member-page">
-      <main className="view-member-card">
-        <header className="view-member-head">
-          <div>
-            <h1>Team members</h1>
-            <p className="view-member-team">
-              Team name: <strong>{teamName}</strong> {members.length ? `• ${members.length} member${members.length === 1 ? '' : 's'}` : ''}
-            </p>
-          </div>
-          <button type="button" className="view-member-back-btn" onClick={() => navigate('/chat')}>
-            Back to chat
-          </button>
-        </header>
+      <div className="view-member-container">
+        <h1 className="view-member-title">MEET OUR AMAZING TEAM</h1>
 
-        {notice ? <p className="view-member-status view-member-success">{notice}</p> : null}
-        {error ? <p className="view-member-status view-member-error">{error}</p> : null}
-        {loading ? <p className="view-member-status">Loading members...</p> : null}
+        {notice ? <p className="view-member-success">{notice}</p> : null}
+        {error ? <p className="view-member-error">{error}</p> : null}
+        {loading ? <p className="view-member-loading">Loading members...</p> : null}
 
         {!loading && !error && members.length === 0 ? (
           <div className="view-member-empty">No members have been added yet.</div>
@@ -68,25 +48,26 @@ const ViewMemberPage = () => {
           <section className="member-grid">
             {members.map((member) => {
               const imageSrc = member.profileImage || member.photoUrl || '';
-              const initials = getInitials(member.name);
 
               return (
-                <article key={member._id} className="member-tile">
-                  <div className="member-tile-image-wrap">
+                <article key={member._id} className="member-card">
+                  <div className="member-card-image">
                     {imageSrc ? (
-                      <img src={imageSrc} alt={member.name} className="member-tile-image" />
+                      <img src={imageSrc} alt={member.name} className="member-image" />
                     ) : (
-                      <div className="member-tile-avatar tone-6">{initials}</div>
+                      <div className="member-placeholder">No Image</div>
                     )}
                   </div>
 
-                  <div className="member-tile-body">
-                    <span className="member-team-badge">{member.teamName || teamName}</span>
-                    <h2 className="member-tile-name">{member.name}</h2>
-                    <p className="member-tile-role">{member.role}</p>
-                    <p className="member-tile-roll">Roll No. {member.rollNo || member.rollNumber}</p>
-                    <button type="button" className="member-tile-btn" onClick={() => openMemberDetails(member._id)}>
-                      View Details
+                  <div className="member-card-content">
+                    <h2 className="member-name">{member.name}</h2>
+                    <p className="member-roll">Roll Number: {member.rollNo || member.rollNumber || '-'}</p>
+                    <button 
+                      type="button" 
+                      className="member-details-btn" 
+                      onClick={() => openMemberDetails(member._id)}
+                    >
+                      VIEW DETAILS
                     </button>
                   </div>
                 </article>
@@ -94,7 +75,7 @@ const ViewMemberPage = () => {
             })}
           </section>
         ) : null}
-      </main>
+      </div>
     </div>
   );
 };

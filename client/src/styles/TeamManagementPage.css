@@ -1,0 +1,135 @@
+.team-management-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #2a2d3a 0%, #1a1d2e 100%);
+  color: #ffffff;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+}
+
+.team-management-container {
+  text-align: center;
+  width: 100%;
+  max-width: 600px;
+  padding: 40px 20px;
+}
+
+.team-title {
+  font-size: 4rem;
+  font-weight: 300;
+  letter-spacing: 8px;
+  margin: 0 0 20px;
+  text-transform: uppercase;
+}
+
+.team-subtitle {
+  font-size: 1.1rem;
+  color: #b0b3c1;
+  margin: 0 0 60px;
+  font-weight: 400;
+  letter-spacing: 0.5px;
+}
+
+.team-management-card {
+  background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
+  padding: 40px;
+  border-radius: 20px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.team-card-title {
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin: 0 0 30px;
+  letter-spacing: 0.5px;
+}
+
+.team-actions {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.team-action-btn {
+  padding: 14px 32px;
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: capitalize;
+  letter-spacing: 0.3px;
+  min-width: 160px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.add-member-btn {
+  background: #ffffff;
+  color: #1e3a8a;
+}
+
+.add-member-btn:hover {
+  background: #f0f0f0;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+.add-member-btn:active {
+  transform: translateY(0);
+}
+
+.view-members-btn {
+  background: #ffffff;
+  color: #1e3a8a;
+}
+
+.view-members-btn:hover {
+  background: #f0f0f0;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+.view-members-btn:active {
+  transform: translateY(0);
+}
+
+@media (max-width: 768px) {
+  .team-management-container {
+    padding: 30px 20px;
+  }
+
+  .team-title {
+    font-size: 2.5rem;
+    letter-spacing: 4px;
+  }
+
+  .team-subtitle {
+    font-size: 1rem;
+    margin-bottom: 40px;
+  }
+
+  .team-management-card {
+    padding: 30px 20px;
+  }
+
+  .team-card-title {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+  }
+
+  .team-actions {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .team-action-btn {
+    min-width: unset;
+    width: 100%;
+    padding: 12px 24px;
+  }
+}
