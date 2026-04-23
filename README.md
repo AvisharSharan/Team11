@@ -247,7 +247,6 @@ Backend will start on `http://localhost:5000`
 
 Terminal 2 - Start Frontend Development Server:
 ```bash
-cd client
 npm start
 ```
 Frontend will open automatically at `http://localhost:3000`

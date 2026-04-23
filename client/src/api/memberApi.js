@@ -7,7 +7,6 @@ export const createMember = async (formData) => {
 
 export const fetchAllMembers = async () => {
     const { data } = await api.get('/members');
-    // Support both wrapped ({ data }) and plain-array API responses.
     if (Array.isArray(data)) {
         return { data };
     }
@@ -16,7 +15,6 @@ export const fetchAllMembers = async () => {
 
 export const fetchMemberById = async (memberId) => {
     const { data } = await api.get(`/members/${memberId}`);
-    // Support both wrapped ({ data }) and plain-object API responses.
     if (data && !data.data) {
         return { data };
     }
