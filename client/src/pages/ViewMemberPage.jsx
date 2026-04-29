@@ -9,7 +9,7 @@ const ViewMemberPage = () => {
   const [members, setMembers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [notice, setNotice] = useState(location.state?.message || '');
+  const [notice] = useState(location.state?.message || '');
 
   useEffect(() => {
     const loadMembers = async () => {
