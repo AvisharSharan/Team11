@@ -4,6 +4,57 @@ const Message = require('../models/Message');
 const Conversation = require('../models/Conversation');
 const { protect } = require('../middleware/authMiddleware');
 
+const escapeRegex = (value) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+// GET /api/messages/search?query=...
+router.get('/search', protect, async (req, res) => {
+  try {
+    const { query } = req.query;
+    if (!query || !query.trim()) {
+      return res.json([]);
+    }
+
+    const conversations = await Conversation.find({
+      participants: { $in: [req.user._id] },
+    }).select('_id');
+
+    const conversationIds = conversations.map((conversation) => conversation._id);
+    if (conversationIds.length === 0) {
+      return res.json([]);
+    }
+
+    const messages = await Message.find({
+      conversationId: { $in: conversationIds },
+      content: { $regex: escapeRegex(query.trim()), $options: 'i' },
+    })
+      .populate('sender', 'name email bio profilePicture')
+      .populate({
+        path: 'conversationId',
+        populate: [
+          { path: 'participants', select: '-password' },
+          { path: 'groupAdmin', select: 'name email' },
+          { path: 'lastMessage', populate: { path: 'sender', select: 'name' } },
+        ],
+      })
+      .sort({ createdAt: -1 })
+      .limit(40);
+
+    const results = messages
+      .filter((message) => message.conversationId)
+      .map((message) => ({
+        _id: message._id,
+        content: message.content,
+        createdAt: message.createdAt,
+        sender: message.sender,
+        conversation: message.conversationId,
+      }));
+
+    res.json(results);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 // GET /api/messages/:conversationId
 router.get('/:conversationId', protect, async (req, res) => {
   try {

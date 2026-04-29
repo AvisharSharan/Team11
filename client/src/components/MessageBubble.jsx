@@ -3,7 +3,7 @@ import useAuthStore from '../store/useAuthStore';
 import UserAvatar from './UserAvatar';
 import '../styles/components/MessageBubble.css';
 
-const MessageBubble = ({ message, onProfileClick }) => {
+const MessageBubble = ({ message, onProfileClick, isHighlighted = false }) => {
   const { user } = useAuthStore();
   const isSent = (message.sender?._id || message.sender) === user._id;
 
@@ -68,7 +68,7 @@ const MessageBubble = ({ message, onProfileClick }) => {
 
   if (isSent) {
     return (
-      <div className="msg-row msg-sent">
+      <div className={`msg-row msg-sent${isHighlighted ? ' msg-highlighted' : ''}`} data-message-id={message._id}>
         <div className="msg-sent-body">
           <div className="bubble-sent">
             {renderFileContent()}
@@ -81,7 +81,7 @@ const MessageBubble = ({ message, onProfileClick }) => {
   }
 
   return (
-    <div className="msg-row msg-received">
+    <div className={`msg-row msg-received${isHighlighted ? ' msg-highlighted' : ''}`} data-message-id={message._id}>
       <button
         type="button"
         className="msg-avatar-btn"

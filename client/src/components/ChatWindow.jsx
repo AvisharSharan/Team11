@@ -6,7 +6,7 @@ import MessageBubble from './MessageBubble';
 import UserAvatar from './UserAvatar';
 import '../styles/components/ChatWindow.css';
 
-const ChatWindow = ({ onViewProfile }) => {
+const ChatWindow = ({ onViewProfile, highlightedMessageId, onHighlightHandled }) => {
   const { activeConversation, messages, fetchMessages, sendMessage, sendFile, loadingMessages, isTyping } = useChatStore();
   const { user } = useAuthStore();
   const [input, setInput] = useState('');
@@ -33,6 +33,16 @@ const ChatWindow = ({ onViewProfile }) => {
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
+
+  useEffect(() => {
+    if (!highlightedMessageId || loadingMessages) return;
+
+    const highlightedElement = document.querySelector(`[data-message-id="${highlightedMessageId}"]`);
+    if (!highlightedElement) return;
+
+    highlightedElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    onHighlightHandled?.();
+  }, [highlightedMessageId, loadingMessages, messages, onHighlightHandled]);
 
   const handleSend = async (e) => {
     e.preventDefault();
@@ -170,7 +180,12 @@ const ChatWindow = ({ onViewProfile }) => {
                   <p className="messages-empty">No messages yet. Say hello! 👋</p>
                 )}
                 {messages.map((msg) => (
-                  <MessageBubble key={msg._id} message={msg} onProfileClick={onViewProfile} />
+                  <MessageBubble
+                    key={msg._id}
+                    message={msg}
+                    onProfileClick={onViewProfile}
+                    isHighlighted={msg._id === highlightedMessageId}
+                  />
                 ))}
                 {typingName && (
                   <p className="typing-text">••• {typingName} is typing</p>
