@@ -251,6 +251,7 @@
   font-weight: 700;
   display: grid;
   place-items: center;
+  overflow: hidden;
 }
 
 .conv-info {

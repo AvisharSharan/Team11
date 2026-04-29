@@ -1,22 +1,17 @@
 import React from 'react';
 import useAuthStore from '../store/useAuthStore';
+import UserAvatar from './UserAvatar';
 import '../styles/components/MessageBubble.css';
 
-const avatarTone = (name = '') => `tone-${name.charCodeAt(0) % 8}`;
-
-const MessageBubble = ({ message }) => {
+const MessageBubble = ({ message, onProfileClick }) => {
   const { user } = useAuthStore();
   const isSent = (message.sender?._id || message.sender) === user._id;
 
   const formatTime = (dateStr) =>
     new Date(dateStr).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
-  const senderName = typeof message.sender === 'object' ? message.sender.name : 'User';
-  const initials = (senderName || 'U')
-    .split(' ')
-    .slice(0, 2)
-    .map((w) => w[0]?.toUpperCase())
-    .join('');
+  const sender = typeof message.sender === 'object' ? message.sender : null;
+  const senderName = sender?.name || 'User';
 
   const renderFileContent = () => {
     if (!message.fileUrl) return null;
@@ -87,12 +82,19 @@ const MessageBubble = ({ message }) => {
 
   return (
     <div className="msg-row msg-received">
-      <div className={`msg-avatar ${avatarTone(senderName)}`}>
-        {initials}
-      </div>
+      <button
+        type="button"
+        className="msg-avatar-btn"
+        onClick={() => sender && onProfileClick?.(sender)}
+        aria-label={`View ${senderName} profile`}
+      >
+        <UserAvatar user={sender} fallbackName={senderName} className="msg-avatar" />
+      </button>
       <div className="msg-recv-body">
         <div className="msg-meta">
-          <span className="msg-sender-name">{senderName}</span>
+          <button type="button" className="msg-sender-name" onClick={() => sender && onProfileClick?.(sender)}>
+            {senderName}
+          </button>
           <span className="msg-time-recv">{formatTime(message.createdAt)}</span>
         </div>
         <div className="bubble-received">

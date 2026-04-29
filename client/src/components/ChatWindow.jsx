@@ -3,9 +3,10 @@ import useChatStore from '../store/useChatStore';
 import useAuthStore from '../store/useAuthStore';
 import { getSocket } from '../socket/socket';
 import MessageBubble from './MessageBubble';
+import UserAvatar from './UserAvatar';
 import '../styles/components/ChatWindow.css';
 
-const ChatWindow = ({ onToggleSidebar }) => {
+const ChatWindow = ({ onViewProfile }) => {
   const { activeConversation, messages, fetchMessages, sendMessage, sendFile, loadingMessages, isTyping } = useChatStore();
   const { user } = useAuthStore();
   const [input, setInput] = useState('');
@@ -18,6 +19,9 @@ const ChatWindow = ({ onToggleSidebar }) => {
   const headerTitle = activeConversation?.isGroup
     ? (activeConversation.groupName || 'Group chat')
     : (other?.name || 'Chat');
+  const headerSubtitle = activeConversation?.isGroup
+    ? `${activeConversation.participants?.length || 0} members`
+    : (other?.email || '');
 
   // Fetch messages and join the socket room when conversation changes
   useEffect(() => {
@@ -106,10 +110,36 @@ const ChatWindow = ({ onToggleSidebar }) => {
       <div className="chat-header">
         {activeConversation && (
           <>
-            <div className="chat-header-info">
+            {!activeConversation.isGroup && other && (
+              <button
+                type="button"
+                className="chat-header-avatar-btn"
+                onClick={() => onViewProfile?.(other)}
+                aria-label={`View ${other.name} profile`}
+              >
+                <UserAvatar user={other} className="chat-header-avatar" />
+              </button>
+            )}
+            <div
+              className={`chat-header-info${!activeConversation.isGroup && other ? ' clickable' : ''}`}
+              onClick={!activeConversation.isGroup && other ? () => onViewProfile?.(other) : undefined}
+              role={!activeConversation.isGroup && other ? 'button' : undefined}
+              tabIndex={!activeConversation.isGroup && other ? 0 : undefined}
+              onKeyDown={
+                !activeConversation.isGroup && other
+                  ? (event) => {
+                      if (event.key === 'Enter' || event.key === ' ') {
+                        event.preventDefault();
+                        onViewProfile?.(other);
+                      }
+                    }
+                  : undefined
+              }
+            >
               <div className="chat-header-top">
                 <p className="chat-header-name">{headerTitle}</p>
               </div>
+              {headerSubtitle && <p className="chat-header-subtitle">{headerSubtitle}</p>}
             </div>
           </>
         )}
@@ -140,7 +170,7 @@ const ChatWindow = ({ onToggleSidebar }) => {
                   <p className="messages-empty">No messages yet. Say hello! 👋</p>
                 )}
                 {messages.map((msg) => (
-                  <MessageBubble key={msg._id} message={msg} />
+                  <MessageBubble key={msg._id} message={msg} onProfileClick={onViewProfile} />
                 ))}
                 {typingName && (
                   <p className="typing-text">••• {typingName} is typing</p>

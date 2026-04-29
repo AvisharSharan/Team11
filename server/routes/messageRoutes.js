@@ -10,7 +10,7 @@ router.get('/:conversationId', protect, async (req, res) => {
     const messages = await Message.find({
       conversationId: req.params.conversationId,
     })
-      .populate('sender', 'name email')
+      .populate('sender', 'name email bio profilePicture')
       .sort({ createdAt: 1 });
 
     res.json(messages);
@@ -43,7 +43,7 @@ router.post('/', protect, async (req, res) => {
       readBy: [req.user._id],
     });
 
-    const populated = await Message.findById(message._id).populate('sender', 'name email');
+    const populated = await Message.findById(message._id).populate('sender', 'name email bio profilePicture');
 
     // Update conversation's lastMessage and updatedAt
     await Conversation.findByIdAndUpdate(conversationId, {

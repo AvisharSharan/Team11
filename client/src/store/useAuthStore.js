@@ -2,6 +2,15 @@ import { create } from 'zustand';
 import api from '../api/axiosInstance';
 import { connectSocket, disconnectSocket } from '../socket/socket';
 
+const persistAuth = (token, user) => {
+  if (token) {
+    localStorage.setItem('token', token);
+  }
+  if (user) {
+    localStorage.setItem('user', JSON.stringify(user));
+  }
+};
+
 const useAuthStore = create((set) => ({
   user: JSON.parse(localStorage.getItem('user')) || null,
   token: localStorage.getItem('token') || null,
@@ -19,10 +28,16 @@ const useAuthStore = create((set) => ({
         return;
       }
       // Fallback for legacy behavior if needed
-      localStorage.setItem('token', data.token);
-      localStorage.setItem('user', JSON.stringify({ _id: data._id, name: data.name, email: data.email }));
+      const user = {
+        _id: data._id,
+        name: data.name,
+        email: data.email,
+        bio: data.bio || '',
+        profilePicture: data.profilePicture || '',
+      };
+      persistAuth(data.token, user);
       connectSocket(data.token);
-      set({ user: { _id: data._id, name: data.name, email: data.email }, token: data.token, loading: false });
+      set({ user, token: data.token, loading: false });
     } catch (err) {
       set({ error: err.response?.data?.message || 'Registration failed', loading: false });
     }
@@ -32,10 +47,16 @@ const useAuthStore = create((set) => ({
     set({ loading: true, error: null });
     try {
       const { data } = await api.post('/auth/login', { email, password });
-      localStorage.setItem('token', data.token);
-      localStorage.setItem('user', JSON.stringify({ _id: data._id, name: data.name, email: data.email }));
+      const user = {
+        _id: data._id,
+        name: data.name,
+        email: data.email,
+        bio: data.bio || '',
+        profilePicture: data.profilePicture || '',
+      };
+      persistAuth(data.token, user);
       connectSocket(data.token);
-      set({ user: { _id: data._id, name: data.name, email: data.email }, token: data.token, loading: false });
+      set({ user, token: data.token, loading: false });
     } catch (err) {
       const errorData = err.response?.data;
       if (errorData?.requiresVerification) {
@@ -55,11 +76,17 @@ const useAuthStore = create((set) => ({
     set({ loading: true, error: null });
     try {
       const { data } = await api.post('/auth/verify-email', { email, code });
-      localStorage.setItem('token', data.token);
-      localStorage.setItem('user', JSON.stringify({ _id: data._id, name: data.name, email: data.email }));
+      const user = {
+        _id: data._id,
+        name: data.name,
+        email: data.email,
+        bio: data.bio || '',
+        profilePicture: data.profilePicture || '',
+      };
+      persistAuth(data.token, user);
       connectSocket(data.token);
       set({ 
-        user: { _id: data._id, name: data.name, email: data.email }, 
+        user,
         token: data.token, 
         needsVerification: false,
         verificationEmail: null,
@@ -72,6 +99,27 @@ const useAuthStore = create((set) => ({
   },
 
   cancelVerification: () => set({ needsVerification: false, verificationEmail: null, error: null }),
+
+  updateProfile: async ({ name, bio, profilePicture }) => {
+    set({ loading: true, error: null });
+    try {
+      const { data } = await api.put('/users/me', { name, bio, profilePicture });
+      const user = {
+        _id: data._id,
+        name: data.name,
+        email: data.email,
+        bio: data.bio || '',
+        profilePicture: data.profilePicture || '',
+      };
+      persistAuth(localStorage.getItem('token'), user);
+      set({ user, loading: false });
+      return user;
+    } catch (err) {
+      const message = err.response?.data?.message || 'Profile update failed';
+      set({ error: message, loading: false });
+      throw err;
+    }
+  },
 
   logout: () => {
     localStorage.removeItem('token');

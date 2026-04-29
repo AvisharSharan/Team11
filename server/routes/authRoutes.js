@@ -99,7 +99,9 @@ router.post('/verify-email', async (req, res) => {
     res.json({
       _id: user._id,
       name: user.name,
+      bio: user.bio,
       email: user.email,
+      profilePicture: user.profilePicture,
       token: generateToken(user._id),
       message: 'Email verified successfully'
     });
@@ -129,7 +131,9 @@ router.post('/login', async (req, res) => {
     res.json({
       _id: user._id,
       name: user.name,
+      bio: user.bio,
       email: user.email,
+      profilePicture: user.profilePicture,
       token: generateToken(user._id),
     });
   } catch (error) {

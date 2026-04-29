@@ -3,9 +3,8 @@ import api from '../api/axiosInstance';
 import useChatStore from '../store/useChatStore';
 import useAuthStore from '../store/useAuthStore';
 import { getSocket } from '../socket/socket';
+import UserAvatar from './UserAvatar';
 import '../styles/components/Sidebar.css';
-
-const avatarTone = (name = '') => `tone-${name.charCodeAt(0) % 8}`;
 
 const Sidebar = ({ isOpen = false, onClose = () => {} }) => {
   const [query, setQuery] = useState('');
@@ -268,10 +267,7 @@ const Sidebar = ({ isOpen = false, onClose = () => {} }) => {
                   className={`conv-item${isCreatingGroup && selectedGroupUsers.includes(u._id) ? ' active' : ''}`}
                   onClick={() => handleSelectUser(u._id)}
                 >
-                  <div className={`conv-avatar ${avatarTone(u.name || '')}`}>
-                    {u.name[0].toUpperCase()}
-                    {u.name.split(' ')[1]?.[0]?.toUpperCase() || ''}
-                  </div>
+                  <UserAvatar user={u} className="conv-avatar" />
                   <div className="conv-info">
                     <div className="conv-row-top">
                       <span className="conv-name">{u.name}</span>
@@ -300,14 +296,9 @@ const Sidebar = ({ isOpen = false, onClose = () => {} }) => {
               const isOtherTyping = isTyping[conv._id];
               const title = getConversationTitle(conv);
               const subtitle = getConversationSubtitle(conv, isOtherTyping);
-              const avatarSeed = conv.isGroup ? (conv.groupName || 'Group') : (other?.name || 'Chat');
-              const initials = conv.isGroup
-                ? (conv.groupName || 'Group')
-                    .split(' ')
-                    .slice(0, 2)
-                    .map((w) => w[0]?.toUpperCase())
-                    .join('')
-                : `${other.name[0].toUpperCase()}${other.name.split(' ')[1]?.[0]?.toUpperCase() || ''}`;
+              const avatarUser = conv.isGroup
+                ? { name: conv.groupName || 'Group' }
+                : other;
 
               return (
                 <li key={conv._id}>
@@ -324,9 +315,7 @@ const Sidebar = ({ isOpen = false, onClose = () => {} }) => {
                         />
                       </div>
                     )}
-                    <div className={`conv-avatar ${avatarTone(avatarSeed)}`}>
-                      {initials}
-                    </div>
+                    <UserAvatar user={avatarUser} className="conv-avatar" />
                     <div className="conv-info">
                       <div className="conv-row-top">
                         <span className="conv-name">{title}</span>

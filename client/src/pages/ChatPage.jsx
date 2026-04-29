@@ -4,6 +4,8 @@ import useAuthStore from '../store/useAuthStore';
 import useChatStore from '../store/useChatStore';
 import { connectSocket, getSocket } from '../socket/socket';
 import { requestNotificationPermission, showMessageNotification } from '../utils/browserNotifications';
+import UserAvatar from '../components/UserAvatar';
+import ProfilePanel from '../components/ProfilePanel';
 import Sidebar from '../components/Sidebar';
 import ChatWindow from '../components/ChatWindow';
 
@@ -11,6 +13,7 @@ const ChatPage = () => {
   const { user, token, logout } = useAuthStore();
   const { conversations, fetchConversations, receiveMessage, setTyping, removeConversation } = useChatStore();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [profilePanelState, setProfilePanelState] = useState({ open: false, mode: 'view', user: null });
   const navigate = useNavigate();
 
   // Redirect if not logged in
@@ -79,8 +82,18 @@ const ChatPage = () => {
 
   const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
   const closeSidebar = () => setSidebarOpen(false);
-  const avatarTone = (name = '') => `tone-${name.charCodeAt(0) % 8}`;
   const openTeamManagement = () => navigate('/team-management');
+  const openOwnProfile = () => setProfilePanelState({ open: true, mode: 'edit', user });
+  const openUserProfile = (targetUser) => {
+    if (!targetUser) return;
+    const mode = targetUser._id === user._id ? 'edit' : 'view';
+    setProfilePanelState({ open: true, mode, user: targetUser });
+  };
+  const closeProfilePanel = () => setProfilePanelState({ open: false, mode: 'view', user: null });
+  const handleProfileSaved = async () => {
+    setProfilePanelState({ open: false, mode: 'view', user: null });
+    await fetchConversations();
+  };
 
   return (
     <div className="chat-page">
@@ -110,12 +123,10 @@ const ChatPage = () => {
               Team Management
             </button>
           </div>
-          <div className="chat-user-mini">
-            <div className={`chat-user-avatar-sm ${avatarTone(user?.name || '')}`}>
-              {user?.name?.[0].toUpperCase()}{user?.name?.split(' ')[1]?.[0]?.toUpperCase() || ''}
-            </div>
+          <button className="chat-user-mini" type="button" onClick={openOwnProfile}>
+            <UserAvatar user={user} className="chat-user-avatar-sm" />
             <span className="chat-user-name-sm">{user?.name}</span>
-          </div>
+          </button>
           <button className="chat-logout-btn" onClick={logout} title="Logout" aria-label="Logout">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
@@ -132,8 +143,16 @@ const ChatPage = () => {
           <div className="sidebar-overlay" onClick={closeSidebar} />
         )}
         <Sidebar isOpen={sidebarOpen} onClose={closeSidebar} />
-        <ChatWindow onToggleSidebar={toggleSidebar} />
+        <ChatWindow onViewProfile={openUserProfile} />
       </div>
+      {profilePanelState.open && (
+        <ProfilePanel
+          mode={profilePanelState.mode}
+          user={profilePanelState.user}
+          onClose={closeProfilePanel}
+          onProfileSaved={handleProfileSaved}
+        />
+      )}
     </div>
   );
 };

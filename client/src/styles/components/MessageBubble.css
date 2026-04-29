@@ -18,6 +18,12 @@
   place-items: center;
   margin-top: 0.1rem;
   flex-shrink: 0;
+  overflow: hidden;
+}
+
+.msg-avatar-btn {
+  border-radius: 999px;
+  flex-shrink: 0;
 }
 
 .msg-recv-body,

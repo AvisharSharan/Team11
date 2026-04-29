@@ -23,9 +23,33 @@
   background: #ffffff;
 }
 
+.chat-header-avatar-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 14px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.chat-header-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 14px;
+  color: #fff;
+  font-size: 0.78rem;
+  font-weight: 700;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+
 .chat-header-info {
   min-width: 0;
   flex: 1;
+}
+
+.chat-header-info.clickable {
+  cursor: pointer;
 }
 
 .chat-header-top {
@@ -42,6 +66,12 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.chat-header-subtitle {
+  margin-top: 0.15rem;
+  font-size: 0.78rem;
+  color: #55726a;
 }
 
 .chat-header-actions {
