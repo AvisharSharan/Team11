@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import useAuthStore from '../store/useAuthStore';
 import useChatStore from '../store/useChatStore';
 import { connectSocket, getSocket } from '../socket/socket';
+import { requestNotificationPermission, showMessageNotification } from '../utils/browserNotifications';
 import Sidebar from '../components/Sidebar';
 import ChatWindow from '../components/ChatWindow';
 
@@ -22,11 +23,13 @@ const ChatPage = () => {
     // Connect socket and setup user room
     connectSocket(token);
     fetchConversations();
+    requestNotificationPermission();
 
     const socket = getSocket();
 
     // Incoming message from another user
     const onMessageReceived = (message) => {
+      showMessageNotification(message);
       receiveMessage(message);
     };
 
@@ -54,7 +57,7 @@ const ChatPage = () => {
       socket.off('stop typing', onStopTyping);
       socket.off('conversation deleted', onConversationDeleted);
     };
-  }, [user, navigate, fetchConversations, receiveMessage, setTyping]);
+  }, [user, token, navigate, fetchConversations, receiveMessage, setTyping, removeConversation]);
 
   // Join all conversation rooms to receive real-time updates for unread messages
   useEffect(() => {
