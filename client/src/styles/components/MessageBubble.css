@@ -47,13 +47,13 @@
 .msg-sender-name {
   font-size: 0.75rem;
   font-weight: 600;
-  color: #143327;
+  color: var(--chat-text);
 }
 
 .msg-time-recv,
 .msg-time-sent {
   font-size: 0.68rem;
-  color: #7a9086;
+  color: var(--chat-muted);
 }
 
 .bubble-received,
@@ -67,9 +67,9 @@
 }
 
 .bubble-received {
-  background: #ffffff;
-  border: 1px solid #dfe8e4;
-  color: #143327;
+  background: var(--chat-surface);
+  border: 1px solid var(--chat-line);
+  color: var(--chat-text);
 }
 
 .bubble-sent {
@@ -150,8 +150,8 @@
 }
 
 .msg-highlighted {
-  background: rgba(15, 124, 90, 0.08);
-  box-shadow: 0 0 0 1px rgba(15, 124, 90, 0.12);
+  background: var(--chat-highlight);
+  box-shadow: 0 0 0 1px var(--chat-highlight-border);
 }
 
 @media (max-width: 768px) {

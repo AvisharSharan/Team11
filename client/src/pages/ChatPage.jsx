@@ -15,6 +15,7 @@ const ChatPage = () => {
   const { conversations, fetchConversations, receiveMessage, setTyping, removeConversation, setActiveConversation } = useChatStore();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [profilePanelState, setProfilePanelState] = useState({ open: false, mode: 'view', user: null });
+  const [isDarkMode, setIsDarkMode] = useState(() => localStorage.getItem('chat-theme') === 'dark');
   const [searchText, setSearchText] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const [searchLoading, setSearchLoading] = useState(false);
@@ -85,6 +86,10 @@ const ChatPage = () => {
   }, [conversations]);
 
   useEffect(() => {
+    localStorage.setItem('chat-theme', isDarkMode ? 'dark' : 'light');
+  }, [isDarkMode]);
+
+  useEffect(() => {
     clearTimeout(searchTimeoutRef.current);
 
     if (!searchText.trim()) {
@@ -148,9 +153,10 @@ const ChatPage = () => {
       setSearchResults([]);
     }
   };
+  const toggleDarkMode = () => setIsDarkMode((current) => !current);
 
   return (
-    <div className="chat-page">
+    <div className={`chat-page${isDarkMode ? ' theme-dark' : ''}`}>
       {/* Header */}
       <header className="chat-top-header">
         <div className="chat-header-left">
@@ -210,6 +216,31 @@ const ChatPage = () => {
         </div>
         <div className="chat-header-right">
           <div className="chat-member-actions">
+            <button
+              className="chat-theme-toggle"
+              onClick={toggleDarkMode}
+              type="button"
+              aria-label={isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'}
+              title={isDarkMode ? 'Light mode' : 'Dark mode'}
+            >
+              {isDarkMode ? (
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="12" cy="12" r="4" />
+                  <path d="M12 2v2" />
+                  <path d="M12 20v2" />
+                  <path d="m4.93 4.93 1.41 1.41" />
+                  <path d="m17.66 17.66 1.41 1.41" />
+                  <path d="M2 12h2" />
+                  <path d="M20 12h2" />
+                  <path d="m6.34 17.66-1.41 1.41" />
+                  <path d="m19.07 4.93-1.41 1.41" />
+                </svg>
+              ) : (
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M12 3a6 6 0 1 0 9 9 9 9 0 1 1-9-9z" />
+                </svg>
+              )}
+            </button>
             <button
               className="chat-team-management-btn"
               onClick={openTeamManagement}

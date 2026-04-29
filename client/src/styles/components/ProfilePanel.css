@@ -2,7 +2,7 @@
   position: fixed;
   inset: 0;
   z-index: 1200;
-  background: rgba(10, 23, 19, 0.34);
+  background: var(--chat-overlay);
   backdrop-filter: blur(4px);
   display: flex;
   justify-content: flex-end;
@@ -13,8 +13,8 @@
   height: 100%;
   background:
     radial-gradient(460px 180px at 100% 0%, rgba(232, 255, 244, 0.9), transparent 65%),
-    #ffffff;
-  border-left: 1px solid #dfe8e4;
+    var(--chat-surface);
+  border-left: 1px solid var(--chat-line);
   box-shadow: -16px 0 40px rgba(22, 36, 52, 0.12);
   padding: 1.2rem;
   display: flex;
@@ -41,22 +41,22 @@
 
 .profile-panel-head h2 {
   font-size: 1.15rem;
-  color: #143327;
+  color: var(--chat-text);
 }
 
 .profile-panel-close {
   width: 34px;
   height: 34px;
   border-radius: 10px;
-  border: 1px solid #dfe8e4;
-  color: #55726a;
+  border: 1px solid var(--chat-line);
+  color: var(--chat-muted);
   font-size: 1.2rem;
   line-height: 1;
 }
 
 .profile-panel-close:hover {
-  background: #f6faf8;
-  color: #143327;
+  background: var(--chat-surface-hover);
+  color: var(--chat-text);
 }
 
 .profile-panel-summary {
@@ -65,8 +65,8 @@
   gap: 0.85rem;
   padding: 1rem;
   border-radius: 18px;
-  background: #f6faf8;
-  border: 1px solid #dfe8e4;
+  background: var(--chat-surface-soft);
+  border: 1px solid var(--chat-line);
 }
 
 .profile-panel-avatar {
@@ -84,12 +84,12 @@
 
 .profile-panel-summary-text h3 {
   font-size: 1rem;
-  color: #143327;
+  color: var(--chat-text);
   margin-bottom: 0.2rem;
 }
 
 .profile-panel-summary-text p {
-  color: #55726a;
+  color: var(--chat-muted);
   word-break: break-word;
 }
 
@@ -109,18 +109,18 @@
 .profile-panel-field span {
   font-size: 0.8rem;
   font-weight: 700;
-  color: #305248;
+  color: var(--chat-text);
 }
 
 .profile-panel-field input,
 .profile-panel-field textarea {
   width: 100%;
-  border: 1px solid #d5e8de;
+  border: 1px solid var(--chat-line);
   border-radius: 12px;
-  background: #fbfffd;
+  background: var(--chat-surface-muted);
   padding: 0.75rem 0.85rem;
   font: inherit;
-  color: #143327;
+  color: var(--chat-text);
   outline: none;
 }
 
@@ -131,8 +131,8 @@
 }
 
 .profile-panel-field input:disabled {
-  background: #f2f6f4;
-  color: #6a8378;
+  background: var(--chat-surface-soft);
+  color: var(--chat-muted);
 }
 
 .profile-panel-field textarea {
@@ -141,15 +141,15 @@
 }
 
 .profile-panel-field small {
-  color: #55726a;
+  color: var(--chat-muted);
   text-align: right;
 }
 
 .profile-panel-item {
   padding: 0.95rem 1rem;
   border-radius: 16px;
-  border: 1px solid #dfe8e4;
-  background: #ffffff;
+  border: 1px solid var(--chat-line);
+  background: var(--chat-surface);
 }
 
 .profile-panel-item span {
@@ -159,12 +159,12 @@
   font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  color: #55726a;
+  color: var(--chat-muted);
 }
 
 .profile-panel-item strong,
 .profile-panel-item p {
-  color: #143327;
+  color: var(--chat-text);
   line-height: 1.5;
   word-break: break-word;
 }
@@ -195,9 +195,9 @@
 }
 
 .profile-panel-secondary {
-  border: 1px solid #dfe8e4;
-  background: #ffffff;
-  color: #305248;
+  border: 1px solid var(--chat-line);
+  background: var(--chat-surface);
+  color: var(--chat-text);
 }
 
 .profile-panel-primary {
