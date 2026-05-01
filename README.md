@@ -224,6 +224,11 @@ Before you begin, ensure you have:
 
    # Client URL (for CORS and Socket.io)
    CLIENT_URL=http://localhost:3000
+   CLIENT_URLS=http://localhost:3000
+
+   # Frontend build variables
+   REACT_APP_API_BASE_URL=http://localhost:5000
+   REACT_APP_SOCKET_URL=http://localhost:5000
    ```
 
    **Environment Variables Explained**:
@@ -231,7 +236,18 @@ Before you begin, ensure you have:
    - `JWT_SECRET`: Secret key for signing JWT tokens (change this to a strong random string)
    - `PORT`: Backend server port (default 5000)
    - `NODE_ENV`: Environment mode (development/production)
-   - `CLIENT_URL`: Frontend URL for cross-origin requests and Socket.io connections
+   - `CLIENT_URL` / `CLIENT_URLS`: Frontend URL allowlist for cross-origin requests and Socket.io connections
+   - `REACT_APP_API_BASE_URL`: Backend URL used by the React app; the app automatically adds `/api` if omitted
+   - `REACT_APP_SOCKET_URL`: Backend URL used by Socket.io
+
+### Vercel + Render Deployment
+
+Set these environment variables before deploying:
+
+- Render backend: `MONGO_URI`, `JWT_SECRET`, `NODE_ENV=production`, and `CLIENT_URLS=https://your-vercel-app.vercel.app`
+- Vercel frontend: `REACT_APP_API_BASE_URL=https://your-render-service.onrender.com` and `REACT_APP_SOCKET_URL=https://your-render-service.onrender.com`
+
+After changing any `REACT_APP_*` variable in Vercel, redeploy the frontend. Create React App embeds those values at build time.
 
 ### How to Run the App
 
