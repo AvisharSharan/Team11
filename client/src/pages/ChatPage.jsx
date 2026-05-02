@@ -246,7 +246,8 @@ const ChatPage = () => {
               onClick={openTeamManagement}
               type="button"
             >
-              Team Management
+              <span className="chat-team-label-full">Team Management</span>
+              <span className="chat-team-label-short">Team</span>
             </button>
           </div>
           <button className="chat-user-mini" type="button" onClick={openOwnProfile}>

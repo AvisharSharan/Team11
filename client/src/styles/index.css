@@ -404,6 +404,10 @@ ul { list-style: none; }
   border-color: var(--chat-line-strong);
 }
 
+.chat-team-label-short {
+  display: none;
+}
+
 .chat-menu-toggle {
   display: none;
   width: 36px;
@@ -439,6 +443,7 @@ ul { list-style: none; }
   position: relative;
   width: min(100%, 360px);
   min-width: 220px;
+  flex: 1 1 220px;
 }
 
 .chat-global-search-icon {
@@ -650,15 +655,21 @@ ul { list-style: none; }
   .chat-menu-toggle { display: flex; }
 
   .chat-top-header {
+    min-height: auto;
     gap: 0.75rem;
-    padding: 0 0.75rem;
+    padding: 0.55rem 0.75rem;
+    flex-wrap: wrap;
   }
 
   .chat-header-left {
     gap: 0.55rem;
+    flex: 1 1 180px;
+    flex-wrap: wrap;
   }
 
   .chat-global-search {
+    order: 3;
+    flex-basis: 100%;
     min-width: 0;
     width: 100%;
   }
@@ -685,6 +696,7 @@ ul { list-style: none; }
 
   .chat-header-right {
     gap: 0.45rem;
+    margin-left: auto;
   }
 
   .chat-main {
@@ -692,6 +704,43 @@ ul { list-style: none; }
   }
 
   .sidebar-overlay { display: block; }
+}
+
+@media (max-width: 480px) {
+  .chat-top-header {
+    gap: 0.5rem;
+    padding: 0.5rem 0.65rem;
+  }
+
+  .chat-app-title {
+    font-size: 1rem;
+  }
+
+  .chat-header-left {
+    flex: 1 1 140px;
+  }
+
+  .chat-header-right {
+    gap: 0.35rem;
+  }
+
+  .chat-user-mini {
+    display: none;
+  }
+
+  .chat-team-management-btn {
+    max-width: 58px;
+    padding: 0 10px;
+    white-space: nowrap;
+  }
+
+  .chat-team-label-full {
+    display: none;
+  }
+
+  .chat-team-label-short {
+    display: inline;
+  }
 }
 
 /* Add member page */
