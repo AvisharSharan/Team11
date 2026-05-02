@@ -123,28 +123,40 @@ const useChatStore = create((set, get) => ({
 
   // Called by socket listener when a new message arrives from another user
   receiveMessage: (message) => {
+    const conversationId = String(message.conversationId || message.conversation?._id || '');
     const { activeConversation, unreadCounts } = get();
 
+    if (!conversationId) return;
+
     // If the message belongs to the currently open conversation, append it
-    if (activeConversation && activeConversation._id === message.conversationId) {
+    if (activeConversation && String(activeConversation._id) === conversationId) {
       set((state) => ({ messages: [...state.messages, message] }));
     } else {
       // Increment unread badge for the other conversation
       set({
         unreadCounts: {
           ...unreadCounts,
-          [message.conversationId]: (unreadCounts[message.conversationId] || 0) + 1,
+          [conversationId]: (unreadCounts[conversationId] || 0) + 1,
         },
       });
     }
 
-    // Update lastMessage on sidebar regardless
     set((state) => ({
-      conversations: state.conversations.map((c) =>
-        c._id === message.conversationId
-          ? { ...c, lastMessage: message, updatedAt: message.createdAt }
-          : c
-      ),
+      conversations: (() => {
+        const existingConversation = state.conversations.find((c) => String(c._id) === conversationId);
+        const updatedConversation = existingConversation
+          ? { ...existingConversation, lastMessage: message, updatedAt: message.createdAt }
+          : message.conversation
+            ? { ...message.conversation, lastMessage: message, updatedAt: message.createdAt }
+            : null;
+
+        if (!updatedConversation) return state.conversations;
+
+        return [
+          updatedConversation,
+          ...state.conversations.filter((c) => String(c._id) !== conversationId),
+        ];
+      })(),
     }));
   },
 

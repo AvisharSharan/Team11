@@ -102,6 +102,29 @@ router.post('/', protect, async (req, res) => {
       updatedAt: new Date(),
     });
 
+    const conversation = await Conversation.findById(conversationId)
+      .populate('participants', '-password')
+      .populate('groupAdmin', 'name email')
+      .populate({
+        path: 'lastMessage',
+        populate: { path: 'sender', select: 'name email bio profilePicture' },
+      });
+
+    const io = req.app.get('io');
+    if (io && conversation) {
+      const payload = {
+        ...populated.toObject(),
+        conversationId: String(conversation._id),
+        conversation,
+      };
+
+      conversation.participants.forEach((participant) => {
+        if (String(participant._id) !== String(req.user._id)) {
+          io.to(String(participant._id)).emit('message received', payload);
+        }
+      });
+    }
+
     res.status(201).json(populated);
   } catch (error) {
     res.status(500).json({ message: error.message });

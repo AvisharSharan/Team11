@@ -66,6 +66,8 @@ const io = new Server(server, {
   },
 });
 
+app.set('io', io);
+
 // ─── Middleware ────────────────────────────────────────────────────────────────
 app.use(cors({ origin: corsOrigin, credentials: true }));
 app.use(express.json());

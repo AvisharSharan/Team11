@@ -51,15 +51,8 @@ const ChatWindow = ({ onViewProfile, highlightedMessageId, onHighlightHandled })
     const socket = getSocket();
     socket.emit('stop typing', { conversationId: activeConversation._id });
 
-    const message = await sendMessage(activeConversation._id, input.trim());
+    await sendMessage(activeConversation._id, input.trim());
     setInput('');
-
-    if (message) {
-      socket.emit('new message', {
-        ...message,
-        conversationId: activeConversation._id,
-      });
-    }
   };
 
   const handleTyping = useCallback(
@@ -92,14 +85,7 @@ const ChatWindow = ({ onViewProfile, highlightedMessageId, onHighlightHandled })
 
     setIsUploading(true);
     try {
-      const message = await sendFile(activeConversation._id, file);
-      if (message) {
-        const socket = getSocket();
-        socket.emit('new message', {
-          ...message,
-          conversationId: activeConversation._id,
-        });
-      }
+      await sendFile(activeConversation._id, file);
     } catch (err) {
       console.error('File upload failed:', err);
     } finally {
