@@ -6,7 +6,15 @@ import { getSocket } from '../socket/socket';
 import UserAvatar from './UserAvatar';
 import '../styles/components/Sidebar.css';
 
-const Sidebar = ({ isOpen = false, onClose = () => {} }) => {
+const Sidebar = ({
+  isOpen = false,
+  isDarkMode = false,
+  onClose = () => {},
+  onOpenProfile = () => {},
+  onToggleDarkMode = () => {},
+  onOpenTeamManagement = () => {},
+  onLogout = () => {},
+}) => {
   const [query, setQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const [searching, setSearching] = useState(false);
@@ -23,6 +31,7 @@ const Sidebar = ({ isOpen = false, onClose = () => {} }) => {
     setActiveConversation,
     unreadCounts,
     isTyping,
+    onlineUsers,
     startOrOpenConversation,
     createGroupConversation,
     deleteConversation,
@@ -147,6 +156,21 @@ const Sidebar = ({ isOpen = false, onClose = () => {} }) => {
 
   const isInlineSearching = Boolean(query.trim());
 
+  const handleOpenProfile = () => {
+    onOpenProfile();
+    onClose();
+  };
+
+  const handleOpenTeamManagement = () => {
+    onOpenTeamManagement();
+    onClose();
+  };
+
+  const handleLogout = () => {
+    onLogout();
+    onClose();
+  };
+
   const getConversationTitle = (conversation) => {
     if (conversation.isGroup) {
       return conversation.groupName || 'Group chat';
@@ -173,6 +197,8 @@ const Sidebar = ({ isOpen = false, onClose = () => {} }) => {
 
     return 'No messages yet';
   };
+
+  const isUserOnline = (userId) => Boolean(onlineUsers[String(userId)]);
 
   const formatTime = (dateStr) => {
     if (!dateStr) return '';
@@ -267,13 +293,25 @@ const Sidebar = ({ isOpen = false, onClose = () => {} }) => {
                   className={`conv-item${isCreatingGroup && selectedGroupUsers.includes(u._id) ? ' active' : ''}`}
                   onClick={() => handleSelectUser(u._id)}
                 >
-                  <UserAvatar user={u} className="conv-avatar" />
+                  <span className="conv-avatar-wrap">
+                    <UserAvatar user={u} className="conv-avatar" />
+                    <span
+                      className={`presence-dot${isUserOnline(u._id) ? ' online' : ''}`}
+                      aria-label={isUserOnline(u._id) ? 'Online' : 'Offline'}
+                    />
+                  </span>
                   <div className="conv-info">
                     <div className="conv-row-top">
                       <span className="conv-name">{u.name}</span>
                     </div>
                     <div className="conv-row-bottom">
-                      <span className="conv-last">{u.email}</span>
+                      <span className="conv-last">
+                        <span className={isUserOnline(u._id) ? 'presence-text online' : 'presence-text'}>
+                          {isUserOnline(u._id) ? 'Online' : 'Offline'}
+                        </span>
+                        <span className="conv-status-separator"> · </span>
+                        {u.email}
+                      </span>
                       {isCreatingGroup && selectedGroupUsers.includes(u._id) && (
                         <span className="unread-badge">✓</span>
                       )}
@@ -299,6 +337,7 @@ const Sidebar = ({ isOpen = false, onClose = () => {} }) => {
               const avatarUser = conv.isGroup
                 ? { name: conv.groupName || 'Group' }
                 : other;
+              const otherIsOnline = !conv.isGroup && other ? isUserOnline(other._id) : false;
 
               return (
                 <li key={conv._id}>
@@ -315,14 +354,32 @@ const Sidebar = ({ isOpen = false, onClose = () => {} }) => {
                         />
                       </div>
                     )}
-                    <UserAvatar user={avatarUser} className="conv-avatar" />
+                    <span className="conv-avatar-wrap">
+                      <UserAvatar user={avatarUser} className="conv-avatar" />
+                      {!conv.isGroup && (
+                        <span
+                          className={`presence-dot${otherIsOnline ? ' online' : ''}`}
+                          aria-label={otherIsOnline ? 'Online' : 'Offline'}
+                        />
+                      )}
+                    </span>
                     <div className="conv-info">
                       <div className="conv-row-top">
                         <span className="conv-name">{title}</span>
                         <span className="conv-time">{formatTime(conv.updatedAt)}</span>
                       </div>
                       <div className="conv-row-bottom">
-                        <span className={isOtherTyping ? 'conv-typing' : 'conv-last'}>{subtitle}</span>
+                        <span className={isOtherTyping ? 'conv-typing' : 'conv-last'}>
+                          {!conv.isGroup && !isOtherTyping && (
+                            <>
+                              <span className={otherIsOnline ? 'presence-text online' : 'presence-text'}>
+                                {otherIsOnline ? 'Online' : 'Offline'}
+                              </span>
+                              <span className="conv-status-separator"> · </span>
+                            </>
+                          )}
+                          {subtitle}
+                        </span>
                         {unread > 0 && (
                           <span className="unread-badge">{unread > 9 ? '9+' : unread}</span>
                         )}
@@ -335,6 +392,63 @@ const Sidebar = ({ isOpen = false, onClose = () => {} }) => {
           </>
         )}
       </ul>
+
+      <div className="sidebar-account-panel">
+        <button className="sidebar-profile-btn" type="button" onClick={handleOpenProfile}>
+          <span className="sidebar-profile-avatar-wrap">
+            <UserAvatar user={user} className="sidebar-profile-avatar" />
+            <span className="presence-dot online" aria-label="Online" />
+          </span>
+          <span className="sidebar-profile-meta">
+            <span className="sidebar-profile-name">{user?.name}</span>
+            <span className="sidebar-profile-email">Online · {user?.email}</span>
+          </span>
+        </button>
+        <div className="sidebar-account-actions">
+          <button
+            className="sidebar-account-action"
+            type="button"
+            onClick={onToggleDarkMode}
+            aria-label={isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'}
+          >
+            {isDarkMode ? (
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="4" />
+                <path d="M12 2v2" />
+                <path d="M12 20v2" />
+                <path d="m4.93 4.93 1.41 1.41" />
+                <path d="m17.66 17.66 1.41 1.41" />
+                <path d="M2 12h2" />
+                <path d="M20 12h2" />
+                <path d="m6.34 17.66-1.41 1.41" />
+                <path d="m19.07 4.93-1.41 1.41" />
+              </svg>
+            ) : (
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M12 3a6 6 0 1 0 9 9 9 9 0 1 1-9-9z" />
+              </svg>
+            )}
+            <span>{isDarkMode ? 'Light' : 'Dark'}</span>
+          </button>
+          <button className="sidebar-account-action" type="button" onClick={handleOpenTeamManagement}>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+              <circle cx="9" cy="7" r="4" />
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+              <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+            </svg>
+            <span>Team</span>
+          </button>
+          <button className="sidebar-account-action danger" type="button" onClick={handleLogout}>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+              <polyline points="16 17 21 12 16 7" />
+              <line x1="21" y1="12" x2="9" y2="12" />
+            </svg>
+            <span>Logout</span>
+          </button>
+        </div>
+      </div>
 
     </aside>
   );

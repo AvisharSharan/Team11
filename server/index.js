@@ -100,17 +100,24 @@ app.use('/api/members', memberRoutes);
 app.get('/', (req, res) => res.send('SyncSphere API is running'));
 
 // ─── Socket.io ────────────────────────────────────────────────────────────────
-// maps userId (string) -> socketId
+// maps userId (string) -> Set<socketId>
 const onlineUsers = new Map();
 
 io.on('connection', (socket) => {
-  const userId = socket.userId;
+  const userId = String(socket.userId);
   console.log(`User ${userId} connected (socket: ${socket.id})`);
 
   // Track online user
-  onlineUsers.set(userId, socket.id);
+  const existingSockets = onlineUsers.get(userId) || new Set();
+  const wasOffline = existingSockets.size === 0;
+  existingSockets.add(socket.id);
+  onlineUsers.set(userId, existingSockets);
   socket.join(userId); // personal room
   socket.emit('connected');
+  socket.emit('presence snapshot', Array.from(onlineUsers.keys()));
+  if (wasOffline) {
+    socket.broadcast.emit('user presence changed', { userId, isOnline: true });
+  }
 
   // Join the room for a specific conversation
   socket.on('join conversation', (conversationId) => {
@@ -147,9 +154,15 @@ io.on('connection', (socket) => {
   });
 
   socket.on('disconnect', () => {
-    if (socket.userId && onlineUsers.get(socket.userId) === socket.id) {
-      onlineUsers.delete(socket.userId);
+    const sockets = onlineUsers.get(userId);
+    if (sockets) {
+      sockets.delete(socket.id);
+    }
+
+    if (!sockets || sockets.size === 0) {
+      onlineUsers.delete(userId);
       console.log(`User ${socket.userId} disconnected`);
+      socket.broadcast.emit('user presence changed', { userId, isOnline: false });
     }
   });
 });

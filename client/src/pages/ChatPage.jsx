@@ -5,14 +5,22 @@ import useAuthStore from '../store/useAuthStore';
 import useChatStore from '../store/useChatStore';
 import { connectSocket, getSocket } from '../socket/socket';
 import { requestNotificationPermission, showMessageNotification } from '../utils/browserNotifications';
-import UserAvatar from '../components/UserAvatar';
 import ProfilePanel from '../components/ProfilePanel';
 import Sidebar from '../components/Sidebar';
 import ChatWindow from '../components/ChatWindow';
 
 const ChatPage = () => {
   const { user, token, logout } = useAuthStore();
-  const { conversations, fetchConversations, receiveMessage, setTyping, removeConversation, setActiveConversation } = useChatStore();
+  const {
+    conversations,
+    fetchConversations,
+    receiveMessage,
+    setTyping,
+    removeConversation,
+    setActiveConversation,
+    setOnlineUsers,
+    setUserPresence,
+  } = useChatStore();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [profilePanelState, setProfilePanelState] = useState({ open: false, mode: 'view', user: null });
   const [isDarkMode, setIsDarkMode] = useState(() => localStorage.getItem('chat-theme') === 'dark');
@@ -56,18 +64,40 @@ const ChatPage = () => {
       removeConversation(conversationId);
     };
 
+    const onPresenceSnapshot = (userIds) => {
+      setOnlineUsers(userIds);
+    };
+
+    const onPresenceChanged = ({ userId, isOnline }) => {
+      setUserPresence(userId, isOnline);
+    };
+
     socket.on('message received', onMessageReceived);
     socket.on('typing', onTyping);
     socket.on('stop typing', onStopTyping);
     socket.on('conversation deleted', onConversationDeleted);
+    socket.on('presence snapshot', onPresenceSnapshot);
+    socket.on('user presence changed', onPresenceChanged);
 
     return () => {
       socket.off('message received', onMessageReceived);
       socket.off('typing', onTyping);
       socket.off('stop typing', onStopTyping);
       socket.off('conversation deleted', onConversationDeleted);
+      socket.off('presence snapshot', onPresenceSnapshot);
+      socket.off('user presence changed', onPresenceChanged);
     };
-  }, [user, token, navigate, fetchConversations, receiveMessage, setTyping, removeConversation]);
+  }, [
+    user,
+    token,
+    navigate,
+    fetchConversations,
+    receiveMessage,
+    setTyping,
+    removeConversation,
+    setOnlineUsers,
+    setUserPresence,
+  ]);
 
   // Join all conversation rooms to receive real-time updates for unread messages
   useEffect(() => {
@@ -214,54 +244,6 @@ const ChatPage = () => {
             )}
           </div>
         </div>
-        <div className="chat-header-right">
-          <div className="chat-member-actions">
-            <button
-              className="chat-theme-toggle"
-              onClick={toggleDarkMode}
-              type="button"
-              aria-label={isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'}
-              title={isDarkMode ? 'Light mode' : 'Dark mode'}
-            >
-              {isDarkMode ? (
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <circle cx="12" cy="12" r="4" />
-                  <path d="M12 2v2" />
-                  <path d="M12 20v2" />
-                  <path d="m4.93 4.93 1.41 1.41" />
-                  <path d="m17.66 17.66 1.41 1.41" />
-                  <path d="M2 12h2" />
-                  <path d="M20 12h2" />
-                  <path d="m6.34 17.66-1.41 1.41" />
-                  <path d="m19.07 4.93-1.41 1.41" />
-                </svg>
-              ) : (
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M12 3a6 6 0 1 0 9 9 9 9 0 1 1-9-9z" />
-                </svg>
-              )}
-            </button>
-            <button
-              className="chat-team-management-btn"
-              onClick={openTeamManagement}
-              type="button"
-            >
-              <span className="chat-team-label-full">Team Management</span>
-              <span className="chat-team-label-short">Team</span>
-            </button>
-          </div>
-          <button className="chat-user-mini" type="button" onClick={openOwnProfile}>
-            <UserAvatar user={user} className="chat-user-avatar-sm" />
-            <span className="chat-user-name-sm">{user?.name}</span>
-          </button>
-          <button className="chat-logout-btn" onClick={logout} title="Logout" aria-label="Logout">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-              <polyline points="16 17 21 12 16 7" />
-              <line x1="21" y1="12" x2="9" y2="12" />
-            </svg>
-          </button>
-        </div>
       </header>
 
       {/* Main content */}
@@ -269,7 +251,15 @@ const ChatPage = () => {
         {sidebarOpen && (
           <div className="sidebar-overlay" onClick={closeSidebar} />
         )}
-        <Sidebar isOpen={sidebarOpen} onClose={closeSidebar} />
+        <Sidebar
+          isOpen={sidebarOpen}
+          isDarkMode={isDarkMode}
+          onClose={closeSidebar}
+          onOpenProfile={openOwnProfile}
+          onToggleDarkMode={toggleDarkMode}
+          onOpenTeamManagement={openTeamManagement}
+          onLogout={logout}
+        />
         <ChatWindow
           onViewProfile={openUserProfile}
           highlightedMessageId={highlightedMessageId}

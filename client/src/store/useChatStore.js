@@ -7,6 +7,7 @@ const useChatStore = create((set, get) => ({
   messages: [],
   unreadCounts: {}, // conversationId -> count
   isTyping: {},     // conversationId -> boolean
+  onlineUsers: {},
   loadingMessages: false,
 
   // ─── Conversations ────────────────────────────────────────────────────────
@@ -191,6 +192,25 @@ const useChatStore = create((set, get) => ({
     set((state) => ({
       isTyping: { ...state.isTyping, [conversationId]: value },
     })),
+
+  setOnlineUsers: (userIds) =>
+    set({
+      onlineUsers: userIds.reduce((acc, userId) => {
+        acc[String(userId)] = true;
+        return acc;
+      }, {}),
+    }),
+
+  setUserPresence: (userId, isOnline) =>
+    set((state) => {
+      const onlineUsers = { ...state.onlineUsers };
+      if (isOnline) {
+        onlineUsers[String(userId)] = true;
+      } else {
+        delete onlineUsers[String(userId)];
+      }
+      return { onlineUsers };
+    }),
 
   deleteConversation: async (conversationId) => {
     try {

@@ -330,8 +330,7 @@ ul { list-style: none; }
   z-index: 10;
 }
 
-.chat-header-left,
-.chat-header-right {
+.chat-header-left {
   display: flex;
   align-items: center;
   gap: 0.75rem;
@@ -340,17 +339,6 @@ ul { list-style: none; }
 .chat-header-left {
   min-width: 0;
   flex: 1;
-}
-
-.chat-header-right {
-  flex-shrink: 0;
-}
-
-.chat-member-actions {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  flex-wrap: wrap;
 }
 
 .chat-add-member-btn {
@@ -385,27 +373,6 @@ ul { list-style: none; }
 .chat-view-members-btn:hover {
   background: #f6faf8;
   border-color: #c4d6ce;
-}
-
-.chat-team-management-btn {
-  height: 36px;
-  padding: 0 14px;
-  border-radius: 999px;
-  border: 1px solid var(--chat-line);
-  background: var(--chat-surface);
-  color: var(--chat-text);
-  font-size: 0.84rem;
-  font-weight: 700;
-  transition: all 0.2s;
-}
-
-.chat-team-management-btn:hover {
-  background: var(--chat-surface-hover);
-  border-color: var(--chat-line-strong);
-}
-
-.chat-team-label-short {
-  display: none;
 }
 
 .chat-menu-toggle {
@@ -540,89 +507,6 @@ ul { list-style: none; }
   overflow: hidden;
 }
 
-.chat-user-mini {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  padding: 0.2rem 0.35rem;
-  border-radius: 999px;
-  transition: background 0.2s ease;
-}
-
-.chat-user-mini:hover {
-  background: var(--chat-surface-hover);
-}
-
-.chat-user-avatar-sm {
-  width: 32px;
-  height: 32px;
-  border-radius: 8px;
-  color: #fff;
-  font-size: 0.65rem;
-  font-weight: 700;
-  display: grid;
-  place-items: center;
-  flex-shrink: 0;
-  overflow: hidden;
-}
-
-.chat-user-name-sm {
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: var(--chat-text);
-  white-space: nowrap;
-  max-width: 120px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.chat-logout-btn {
-  width: 36px;
-  height: 36px;
-  border-radius: 8px;
-  color: var(--chat-muted);
-  display: grid;
-  place-items: center;
-  border: 1px solid var(--chat-line);
-  background: var(--chat-surface);
-  transition: all 0.2s;
-  flex-shrink: 0;
-}
-
-.chat-logout-btn svg {
-  width: 16px;
-  height: 16px;
-}
-
-.chat-logout-btn:hover {
-  background: var(--chat-danger-soft);
-  color: #a1133a;
-  border-color: var(--chat-danger-border);
-}
-
-.chat-theme-toggle {
-  width: 36px;
-  height: 36px;
-  border-radius: 8px;
-  color: var(--chat-muted);
-  display: grid;
-  place-items: center;
-  border: 1px solid var(--chat-line);
-  background: var(--chat-surface);
-  transition: background 0.2s, color 0.2s, border-color 0.2s;
-}
-
-.chat-theme-toggle:hover {
-  background: var(--chat-surface-hover);
-  color: var(--accent);
-  border-color: var(--chat-line-strong);
-}
-
-.chat-theme-toggle svg {
-  width: 16px;
-  height: 16px;
-}
-
 .chat-main {
   flex: 1;
   min-height: 0;
@@ -674,8 +558,6 @@ ul { list-style: none; }
     width: 100%;
   }
 
-  .chat-user-name-sm { display: none; }
-
   .chat-add-member-btn {
     height: 34px;
     padding: 0 12px;
@@ -686,17 +568,6 @@ ul { list-style: none; }
     height: 34px;
     padding: 0 12px;
     font-size: 0.8rem;
-  }
-
-  .chat-team-management-btn {
-    height: 34px;
-    padding: 0 12px;
-    font-size: 0.8rem;
-  }
-
-  .chat-header-right {
-    gap: 0.45rem;
-    margin-left: auto;
   }
 
   .chat-main {
@@ -720,27 +591,6 @@ ul { list-style: none; }
     flex: 1 1 140px;
   }
 
-  .chat-header-right {
-    gap: 0.35rem;
-  }
-
-  .chat-user-mini {
-    display: none;
-  }
-
-  .chat-team-management-btn {
-    max-width: 58px;
-    padding: 0 10px;
-    white-space: nowrap;
-  }
-
-  .chat-team-label-full {
-    display: none;
-  }
-
-  .chat-team-label-short {
-    display: inline;
-  }
 }
 
 /* Add member page */

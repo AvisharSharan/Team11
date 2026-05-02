@@ -24,11 +24,27 @@
 }
 
 .chat-header-avatar-btn {
+  position: relative;
   width: 40px;
   height: 40px;
   border-radius: 14px;
-  overflow: hidden;
+  overflow: visible;
   flex-shrink: 0;
+}
+
+.chat-header-presence-dot {
+  position: absolute;
+  right: -1px;
+  bottom: -1px;
+  width: 11px;
+  height: 11px;
+  border-radius: 999px;
+  border: 2px solid var(--chat-header-bg);
+  background: #9aa8a2;
+}
+
+.chat-header-presence-dot.online {
+  background: #16a36b;
 }
 
 .chat-header-avatar {

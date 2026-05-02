@@ -7,7 +7,7 @@ import UserAvatar from './UserAvatar';
 import '../styles/components/ChatWindow.css';
 
 const ChatWindow = ({ onViewProfile, highlightedMessageId, onHighlightHandled }) => {
-  const { activeConversation, messages, fetchMessages, sendMessage, sendFile, loadingMessages, isTyping } = useChatStore();
+  const { activeConversation, messages, fetchMessages, sendMessage, sendFile, loadingMessages, isTyping, onlineUsers } = useChatStore();
   const { user } = useAuthStore();
   const [input, setInput] = useState('');
   const [isSending, setIsSending] = useState(false);
@@ -22,7 +22,7 @@ const ChatWindow = ({ onViewProfile, highlightedMessageId, onHighlightHandled })
     : (other?.name || 'Chat');
   const headerSubtitle = activeConversation?.isGroup
     ? `${activeConversation.participants?.length || 0} members`
-    : (other?.email || '');
+    : (other ? `${onlineUsers[String(other._id)] ? 'Online' : 'Offline'} · ${other.email}` : '');
 
   // Fetch messages and join the socket room when conversation changes
   useEffect(() => {
@@ -124,6 +124,10 @@ const ChatWindow = ({ onViewProfile, highlightedMessageId, onHighlightHandled })
                 aria-label={`View ${other.name} profile`}
               >
                 <UserAvatar user={other} className="chat-header-avatar" />
+                <span
+                  className={`chat-header-presence-dot${onlineUsers[String(other._id)] ? ' online' : ''}`}
+                  aria-label={onlineUsers[String(other._id)] ? 'Online' : 'Offline'}
+                />
               </button>
             )}
             <div
