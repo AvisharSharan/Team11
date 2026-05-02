@@ -10,6 +10,20 @@ const MessageBubble = ({ message, onProfileClick, isHighlighted = false }) => {
   const formatTime = (dateStr) =>
     new Date(dateStr).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
+  const renderStatus = () => {
+    if (message.failed) return <span className="msg-status msg-status-failed">Failed</span>;
+    if (!message.pending) return null;
+
+    return (
+      <span className="msg-status msg-status-pending" aria-label="Sending">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="12" cy="12" r="8" />
+          <path d="M12 7v5l3 2" />
+        </svg>
+      </span>
+    );
+  };
+
   const sender = typeof message.sender === 'object' ? message.sender : null;
   const senderName = sender?.name || 'User';
 
@@ -74,7 +88,10 @@ const MessageBubble = ({ message, onProfileClick, isHighlighted = false }) => {
             {renderFileContent()}
             {message.content && <p className="bubble-text">{message.content}</p>}
           </div>
-          <span className="msg-time-sent">{formatTime(message.createdAt)}</span>
+          <span className="msg-time-sent">
+            {formatTime(message.createdAt)}
+            {renderStatus()}
+          </span>
         </div>
       </div>
     );

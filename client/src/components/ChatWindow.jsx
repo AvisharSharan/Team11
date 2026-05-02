@@ -10,6 +10,7 @@ const ChatWindow = ({ onViewProfile, highlightedMessageId, onHighlightHandled })
   const { activeConversation, messages, fetchMessages, sendMessage, sendFile, loadingMessages, isTyping } = useChatStore();
   const { user } = useAuthStore();
   const [input, setInput] = useState('');
+  const [isSending, setIsSending] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [typingTimeout, setTypingTimeout] = useState(null);
   const bottomRef = useRef(null);
@@ -46,13 +47,22 @@ const ChatWindow = ({ onViewProfile, highlightedMessageId, onHighlightHandled })
 
   const handleSend = async (e) => {
     e.preventDefault();
-    if (!input.trim() || !activeConversation) return;
+    if (!input.trim() || !activeConversation || isSending) return;
+
+    const messageText = input.trim();
+    setInput('');
+    setIsSending(true);
 
     const socket = getSocket();
     socket.emit('stop typing', { conversationId: activeConversation._id });
 
-    await sendMessage(activeConversation._id, input.trim());
-    setInput('');
+    try {
+      await sendMessage(activeConversation._id, messageText, user);
+    } catch (err) {
+      console.error('Message send failed:', err);
+    } finally {
+      setIsSending(false);
+    }
   };
 
   const handleTyping = useCallback(
@@ -217,7 +227,7 @@ const ChatWindow = ({ onViewProfile, highlightedMessageId, onHighlightHandled })
             <button
               type="submit"
               className="send-btn"
-              disabled={(!input.trim() && !isUploading) || isUploading}
+              disabled={!input.trim() || isUploading || isSending}
               aria-label="Send"
             >
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">

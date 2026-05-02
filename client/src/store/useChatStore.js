@@ -68,13 +68,28 @@ const useChatStore = create((set, get) => ({
     }
   },
 
-  sendMessage: async (conversationId, content) => {
+  sendMessage: async (conversationId, content, sender) => {
+    const tempId = `pending-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+    const pendingMessage = {
+      _id: tempId,
+      conversationId,
+      sender,
+      content,
+      createdAt: new Date().toISOString(),
+      pending: true,
+    };
+
+    set((state) => ({
+      messages: [...state.messages, pendingMessage],
+      conversations: state.conversations.map((c) =>
+        c._id === conversationId ? { ...c, lastMessage: pendingMessage, updatedAt: pendingMessage.createdAt } : c
+      ),
+    }));
+
     try {
       const { data } = await api.post('/messages', { conversationId, content });
-      // Optimistically add to local messages list
-      set((state) => ({ messages: [...state.messages, data] }));
-      // Update lastMessage on the conversation in sidebar
       set((state) => ({
+        messages: state.messages.map((message) => (message._id === tempId ? data : message)),
         conversations: state.conversations.map((c) =>
           c._id === conversationId ? { ...c, lastMessage: data, updatedAt: data.createdAt } : c
         ),
@@ -82,6 +97,17 @@ const useChatStore = create((set, get) => ({
       return data;
     } catch (err) {
       console.error('sendMessage error:', err);
+      set((state) => ({
+        messages: state.messages.map((message) =>
+          message._id === tempId ? { ...message, pending: false, failed: true } : message
+        ),
+        conversations: state.conversations.map((c) =>
+          c._id === conversationId && c.lastMessage?._id === tempId
+            ? { ...c, lastMessage: { ...pendingMessage, pending: false, failed: true } }
+            : c
+        ),
+      }));
+      throw err;
     }
   },
 

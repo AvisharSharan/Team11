@@ -56,6 +56,32 @@
   color: var(--chat-muted);
 }
 
+.msg-time-sent {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.msg-status {
+  display: inline-flex;
+  align-items: center;
+}
+
+.msg-status-pending svg {
+  width: 12px;
+  height: 12px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.msg-status-failed {
+  color: #a1133a;
+  font-weight: 700;
+}
+
 .bubble-received,
 .bubble-sent {
   padding: 0.55rem 0.72rem;
