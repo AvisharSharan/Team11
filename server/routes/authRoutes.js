@@ -64,7 +64,10 @@ router.post('/register', async (req, res) => {
       });
     } catch (err) {
       console.error('Email could not be sent:', err);
-      // Optional: Don't fail the request, but tell user to resend code later
+      await User.findByIdAndDelete(user._id);
+      return res.status(502).json({
+        message: 'Account was not created because the verification email could not be sent. Please try again shortly.',
+      });
     }
 
     res.status(201).json({
