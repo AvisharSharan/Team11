@@ -16,11 +16,12 @@ const useAuthStore = create((set) => ({
   token: localStorage.getItem('token') || null,
   loading: false,
   error: null,
+  success: null,
   needsVerification: false,
   verificationEmail: null,
 
   register: async (name, email, password) => {
-    set({ loading: true, error: null });
+    set({ loading: true, error: null, success: null });
     try {
       const { data } = await api.post('/auth/register', { name, email, password });
       if (data.requiresVerification) {
@@ -44,7 +45,7 @@ const useAuthStore = create((set) => ({
   },
 
   login: async (email, password) => {
-    set({ loading: true, error: null });
+    set({ loading: true, error: null, success: null });
     try {
       const { data } = await api.post('/auth/login', { email, password });
       const user = {
@@ -73,7 +74,7 @@ const useAuthStore = create((set) => ({
   },
 
   verifyEmail: async (email, code) => {
-    set({ loading: true, error: null });
+    set({ loading: true, error: null, success: null });
     try {
       const { data } = await api.post('/auth/verify-email', { email, code });
       const user = {
@@ -98,10 +99,34 @@ const useAuthStore = create((set) => ({
     }
   },
 
-  cancelVerification: () => set({ needsVerification: false, verificationEmail: null, error: null }),
+  cancelVerification: () => set({ needsVerification: false, verificationEmail: null, error: null, success: null }),
+
+  requestPasswordReset: async (email) => {
+    set({ loading: true, error: null, success: null });
+    try {
+      const { data } = await api.post('/auth/forgot-password', { email });
+      set({ loading: false, success: data.message || 'Reset code sent.' });
+      return data;
+    } catch (err) {
+      set({ error: err.response?.data?.message || 'Could not send reset code', loading: false });
+      throw err;
+    }
+  },
+
+  resetPassword: async (email, code, password) => {
+    set({ loading: true, error: null, success: null });
+    try {
+      const { data } = await api.post('/auth/reset-password', { email, code, password });
+      set({ loading: false, success: data.message || 'Password reset successfully.' });
+      return data;
+    } catch (err) {
+      set({ error: err.response?.data?.message || 'Password reset failed', loading: false });
+      throw err;
+    }
+  },
 
   updateProfile: async ({ name, bio, profilePicture }) => {
-    set({ loading: true, error: null });
+    set({ loading: true, error: null, success: null });
     try {
       const { data } = await api.put('/users/me', { name, bio, profilePicture });
       const user = {
@@ -128,7 +153,7 @@ const useAuthStore = create((set) => ({
     set({ user: null, token: null });
   },
 
-  clearError: () => set({ error: null }),
+  clearError: () => set({ error: null, success: null }),
 }));
 
 export default useAuthStore;

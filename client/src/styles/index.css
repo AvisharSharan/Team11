@@ -138,6 +138,16 @@ ul { list-style: none; }
   padding: 10px 12px;
 }
 
+.auth-success {
+  margin-bottom: 6px;
+  color: #0f6249;
+  font-size: 14px;
+  background: #effaf5;
+  border: 1px solid #bdebd7;
+  border-radius: 10px;
+  padding: 10px 12px;
+}
+
 .auth-form {
   display: flex;
   flex-direction: column;
@@ -218,6 +228,10 @@ ul { list-style: none; }
 
 .auth-link-btn.bold {
   font-weight: 700;
+}
+
+.auth-forgot-link {
+  margin-top: -2px;
 }
 
 .auth-switch {

@@ -7,6 +7,9 @@ const sendEmail = require('../utils/sendEmail');
 const generateToken = (id) =>
   jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: '7d' });
 
+const generateSixDigitCode = () =>
+  Math.floor(100000 + Math.random() * 900000).toString();
+
 // List of disposable email domains to block
 const DISPOSABLE_DOMAINS = [
   'mailinator.com', 'yopmail.com', 'tempmail.com', 'guerrillamail.com', 
@@ -34,7 +37,7 @@ router.post('/register', async (req, res) => {
     }
 
     // Generate a simple 6-digit verification token
-    const verificationToken = Math.floor(100000 + Math.random() * 900000).toString();
+    const verificationToken = generateSixDigitCode();
 
     const user = await User.create({ 
       name, 
@@ -75,6 +78,83 @@ router.post('/register', async (req, res) => {
       email: user.email,
       requiresVerification: true
     });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// POST /api/auth/forgot-password
+router.post('/forgot-password', async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    if (!email) {
+      return res.status(400).json({ message: 'Email is required' });
+    }
+
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.json({ message: 'If that email exists, a reset code has been sent.' });
+    }
+
+    const resetCode = generateSixDigitCode();
+    user.resetPasswordToken = resetCode;
+    user.resetPasswordExpires = new Date(Date.now() + 15 * 60 * 1000);
+    await user.save();
+
+    await sendEmail({
+      email: user.email,
+      subject: 'Reset your SyncSphere password',
+      message: `Your SyncSphere password reset code is ${resetCode}. It expires in 15 minutes.`,
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #dfe8e4; border-radius: 12px; background-color: #f6faf8;">
+          <h2 style="color: #0f7c5a; text-align: center;">Reset your password</h2>
+          <p style="font-size: 16px; color: #143327;">Hi ${user.name},</p>
+          <p style="font-size: 16px; color: #143327;">Use this code to reset your SyncSphere password. It expires in 15 minutes.</p>
+          <div style="background-color: #ffffff; padding: 15px; border-radius: 8px; text-align: center; margin: 25px 0; border: 1px solid #c8dcd3;">
+            <span style="font-size: 32px; font-weight: bold; letter-spacing: 5px; color: #0f7c5a;">${resetCode}</span>
+          </div>
+          <p style="font-size: 14px; color: #55726a; text-align: center;">If you did not request this, please ignore this email.</p>
+        </div>
+      `,
+    });
+
+    res.json({ message: 'If that email exists, a reset code has been sent.' });
+  } catch (error) {
+    console.error('Password reset email could not be sent:', error);
+    res.status(502).json({ message: 'Reset code could not be sent. Please try again shortly.' });
+  }
+});
+
+// POST /api/auth/reset-password
+router.post('/reset-password', async (req, res) => {
+  try {
+    const { email, code, password } = req.body;
+
+    if (!email || !code || !password) {
+      return res.status(400).json({ message: 'Email, code, and new password are required' });
+    }
+
+    if (password.length < 6) {
+      return res.status(400).json({ message: 'Password must be at least 6 characters' });
+    }
+
+    const user = await User.findOne({
+      email,
+      resetPasswordToken: code,
+      resetPasswordExpires: { $gt: new Date() },
+    });
+
+    if (!user) {
+      return res.status(400).json({ message: 'Invalid or expired reset code' });
+    }
+
+    user.password = password;
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpires = undefined;
+    await user.save();
+
+    res.json({ message: 'Password reset successfully. You can now log in.' });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
