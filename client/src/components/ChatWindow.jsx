@@ -15,6 +15,7 @@ const ChatWindow = ({ onViewProfile, highlightedMessageId, onHighlightHandled })
   const [typingTimeout, setTypingTimeout] = useState(null);
   const bottomRef = useRef(null);
   const fileInputRef = useRef(null);
+  const highlightTimeoutRef = useRef(null);
 
   const other = activeConversation?.participants?.find((p) => p._id !== user._id);
   const headerTitle = activeConversation?.isGroup
@@ -38,11 +39,19 @@ const ChatWindow = ({ onViewProfile, highlightedMessageId, onHighlightHandled })
   useEffect(() => {
     if (!highlightedMessageId || loadingMessages) return;
 
-    const highlightedElement = document.querySelector(`[data-message-id="${highlightedMessageId}"]`);
+    const escapedMessageId = window.CSS?.escape
+      ? window.CSS.escape(highlightedMessageId)
+      : highlightedMessageId.replace(/"/g, '\\"');
+    const highlightedElement = document.querySelector(`[data-message-id="${escapedMessageId}"]`);
     if (!highlightedElement) return;
 
+    clearTimeout(highlightTimeoutRef.current);
     highlightedElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    onHighlightHandled?.();
+    highlightTimeoutRef.current = setTimeout(() => {
+      onHighlightHandled?.();
+    }, 2200);
+
+    return () => clearTimeout(highlightTimeoutRef.current);
   }, [highlightedMessageId, loadingMessages, messages, onHighlightHandled]);
 
   const handleSend = async (e) => {
