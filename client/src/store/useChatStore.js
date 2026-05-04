@@ -5,6 +5,7 @@ const useChatStore = create((set, get) => ({
   conversations: [],
   activeConversation: null,
   messages: [],
+  messagesByConversation: {},
   unreadCounts: {}, // conversationId -> count
   isTyping: {},     // conversationId -> boolean
   onlineUsers: {},
@@ -48,8 +49,12 @@ const useChatStore = create((set, get) => ({
   },
 
   setActiveConversation: (conversation) => {
+    const conversationId = conversation?._id ? String(conversation._id) : null;
+
     set((state) => ({
       activeConversation: conversation,
+      messages: conversationId ? (state.messagesByConversation[conversationId] || []) : [],
+      loadingMessages: conversationId ? !state.messagesByConversation[conversationId] : false,
       // Clear unread count when opening the conversation
       unreadCounts: conversation
         ? { ...state.unreadCounts, [conversation._id]: 0 }
@@ -59,13 +64,36 @@ const useChatStore = create((set, get) => ({
 
   // ─── Messages ─────────────────────────────────────────────────────────────
   fetchMessages: async (conversationId) => {
-    set({ loadingMessages: true });
+    const normalizedConversationId = String(conversationId);
+    const cachedMessages = get().messagesByConversation[normalizedConversationId];
+
+    set((state) => ({
+      messages: cachedMessages || state.messages,
+      loadingMessages: !cachedMessages,
+    }));
+
     try {
       const { data } = await api.get(`/messages/${conversationId}`);
-      set({ messages: data, loadingMessages: false });
+      set((state) => {
+        const isActiveConversation = String(state.activeConversation?._id || '') === normalizedConversationId;
+
+        return {
+          messagesByConversation: {
+            ...state.messagesByConversation,
+            [normalizedConversationId]: data,
+          },
+          messages: isActiveConversation ? data : state.messages,
+          loadingMessages: isActiveConversation ? false : state.loadingMessages,
+        };
+      });
     } catch (err) {
       console.error('fetchMessages error:', err);
-      set({ loadingMessages: false });
+      set((state) => ({
+        loadingMessages:
+          String(state.activeConversation?._id || '') === normalizedConversationId
+            ? false
+            : state.loadingMessages,
+      }));
     }
   },
 
@@ -80,34 +108,70 @@ const useChatStore = create((set, get) => ({
       pending: true,
     };
 
-    set((state) => ({
-      messages: [...state.messages, pendingMessage],
-      conversations: state.conversations.map((c) =>
-        c._id === conversationId ? { ...c, lastMessage: pendingMessage, updatedAt: pendingMessage.createdAt } : c
-      ),
-    }));
+    set((state) => {
+      const normalizedConversationId = String(conversationId);
+      const currentMessages = state.messagesByConversation[normalizedConversationId] || state.messages;
+      const updatedMessages = [...currentMessages, pendingMessage];
+
+      return {
+        messages: String(state.activeConversation?._id || '') === normalizedConversationId
+          ? updatedMessages
+          : state.messages,
+        messagesByConversation: {
+          ...state.messagesByConversation,
+          [normalizedConversationId]: updatedMessages,
+        },
+        conversations: state.conversations.map((c) =>
+          c._id === conversationId ? { ...c, lastMessage: pendingMessage, updatedAt: pendingMessage.createdAt } : c
+        ),
+      };
+    });
 
     try {
       const { data } = await api.post('/messages', { conversationId, content });
-      set((state) => ({
-        messages: state.messages.map((message) => (message._id === tempId ? data : message)),
-        conversations: state.conversations.map((c) =>
-          c._id === conversationId ? { ...c, lastMessage: data, updatedAt: data.createdAt } : c
-        ),
-      }));
+      set((state) => {
+        const normalizedConversationId = String(conversationId);
+        const cachedMessages = state.messagesByConversation[normalizedConversationId] || [];
+        const updatedCachedMessages = cachedMessages.map((message) => (message._id === tempId ? data : message));
+
+        return {
+          messages: String(state.activeConversation?._id || '') === normalizedConversationId
+            ? updatedCachedMessages
+            : state.messages,
+          messagesByConversation: {
+            ...state.messagesByConversation,
+            [normalizedConversationId]: updatedCachedMessages,
+          },
+          conversations: state.conversations.map((c) =>
+            c._id === conversationId ? { ...c, lastMessage: data, updatedAt: data.createdAt } : c
+          ),
+        };
+      });
       return data;
     } catch (err) {
       console.error('sendMessage error:', err);
-      set((state) => ({
-        messages: state.messages.map((message) =>
+      set((state) => {
+        const normalizedConversationId = String(conversationId);
+        const cachedMessages = state.messagesByConversation[normalizedConversationId] || [];
+        const updatedCachedMessages = cachedMessages.map((message) =>
           message._id === tempId ? { ...message, pending: false, failed: true } : message
-        ),
-        conversations: state.conversations.map((c) =>
-          c._id === conversationId && c.lastMessage?._id === tempId
-            ? { ...c, lastMessage: { ...pendingMessage, pending: false, failed: true } }
-            : c
-        ),
-      }));
+        );
+
+        return {
+          messages: String(state.activeConversation?._id || '') === normalizedConversationId
+            ? updatedCachedMessages
+            : state.messages,
+          messagesByConversation: {
+            ...state.messagesByConversation,
+            [normalizedConversationId]: updatedCachedMessages,
+          },
+          conversations: state.conversations.map((c) =>
+            c._id === conversationId && c.lastMessage?._id === tempId
+              ? { ...c, lastMessage: { ...pendingMessage, pending: false, failed: true } }
+              : c
+          ),
+        };
+      });
       throw err;
     }
   },
@@ -131,15 +195,24 @@ const useChatStore = create((set, get) => ({
         fileName: uploadData.originalName,
       });
 
-      // Optimistically add to local messages list
-      set((state) => ({ messages: [...state.messages, messageData] }));
-      
-      // Update lastMessage on the conversation in sidebar
-      set((state) => ({
-        conversations: state.conversations.map((c) =>
-          c._id === conversationId ? { ...c, lastMessage: messageData, updatedAt: messageData.createdAt } : c
-        ),
-      }));
+      set((state) => {
+        const normalizedConversationId = String(conversationId);
+        const currentMessages = state.messagesByConversation[normalizedConversationId] || state.messages;
+        const updatedMessages = [...currentMessages, messageData];
+
+        return {
+          messages: String(state.activeConversation?._id || '') === normalizedConversationId
+            ? updatedMessages
+            : state.messages,
+          messagesByConversation: {
+            ...state.messagesByConversation,
+            [normalizedConversationId]: updatedMessages,
+          },
+          conversations: state.conversations.map((c) =>
+            c._id === conversationId ? { ...c, lastMessage: messageData, updatedAt: messageData.createdAt } : c
+          ),
+        };
+      });
 
       return messageData;
     } catch (err) {
@@ -157,15 +230,32 @@ const useChatStore = create((set, get) => ({
 
     // If the message belongs to the currently open conversation, append it
     if (activeConversation && String(activeConversation._id) === conversationId) {
-      set((state) => ({ messages: [...state.messages, message] }));
+      set((state) => {
+        const cachedMessages = state.messagesByConversation[conversationId] || state.messages;
+        const updatedMessages = [...cachedMessages, message];
+
+        return {
+          messages: updatedMessages,
+          messagesByConversation: {
+            ...state.messagesByConversation,
+            [conversationId]: updatedMessages,
+          },
+        };
+      });
     } else {
       // Increment unread badge for the other conversation
-      set({
+      set((state) => ({
+        messagesByConversation: state.messagesByConversation[conversationId]
+          ? {
+              ...state.messagesByConversation,
+              [conversationId]: [...state.messagesByConversation[conversationId], message],
+            }
+          : state.messagesByConversation,
         unreadCounts: {
           ...unreadCounts,
           [conversationId]: (unreadCounts[conversationId] || 0) + 1,
         },
-      });
+      }));
     }
 
     set((state) => ({
@@ -224,6 +314,9 @@ const useChatStore = create((set, get) => ({
           conversations: newConversations,
           activeConversation: isActive ? null : state.activeConversation,
           messages: isActive ? [] : state.messages,
+          messagesByConversation: Object.fromEntries(
+            Object.entries(state.messagesByConversation).filter(([id]) => id !== String(conversationId))
+          ),
         };
       });
       return true;
@@ -242,6 +335,9 @@ const useChatStore = create((set, get) => ({
         conversations: newConversations,
         activeConversation: isActive ? null : state.activeConversation,
         messages: isActive ? [] : state.messages,
+        messagesByConversation: Object.fromEntries(
+          Object.entries(state.messagesByConversation).filter(([id]) => id !== String(conversationId))
+        ),
       };
     });
   },
