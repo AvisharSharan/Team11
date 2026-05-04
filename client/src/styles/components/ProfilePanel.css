@@ -23,6 +23,13 @@
   overflow-y: auto;
 }
 
+.theme-dark .profile-panel {
+  background:
+    radial-gradient(460px 180px at 100% 0%, rgba(15, 124, 90, 0.18), transparent 65%),
+    var(--chat-surface);
+  box-shadow: -16px 0 40px rgba(0, 0, 0, 0.34);
+}
+
 .profile-panel-head {
   display: flex;
   align-items: flex-start;
@@ -49,6 +56,7 @@
   height: 34px;
   border-radius: 10px;
   border: 1px solid var(--chat-line);
+  background: var(--chat-surface-muted);
   color: var(--chat-muted);
   font-size: 1.2rem;
   line-height: 1;
@@ -124,6 +132,22 @@
   outline: none;
 }
 
+.profile-panel-field input::file-selector-button {
+  margin-right: 0.75rem;
+  border: 1px solid var(--chat-line);
+  border-radius: 10px;
+  background: var(--chat-surface-soft);
+  color: var(--chat-text);
+  font: inherit;
+  font-weight: 700;
+  padding: 0.45rem 0.7rem;
+  cursor: pointer;
+}
+
+.profile-panel-field input::file-selector-button:hover {
+  background: var(--chat-surface-hover);
+}
+
 .profile-panel-field input:focus,
 .profile-panel-field textarea:focus {
   border-color: #0f7c5a;
@@ -171,11 +195,15 @@
 
 .profile-panel-error {
   color: #a1133a;
-  background: #fff2f4;
-  border: 1px solid #ffc6d1;
+  background: var(--chat-danger-soft);
+  border: 1px solid var(--chat-danger-border);
   border-radius: 12px;
   padding: 0.7rem 0.8rem;
   font-size: 0.85rem;
+}
+
+.theme-dark .profile-panel-error {
+  color: #ffb7c5;
 }
 
 .profile-panel-actions {
