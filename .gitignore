@@ -27,3 +27,5 @@ yarn-error.log*
 
 # local report drafts
 report.txt
+project_implementation_status_table.md
+report_changes.txt
